@@ -1,0 +1,106 @@
+@import "../../../styles/vars";
+@import "../../../styles/mixins";
+
+.topBar {
+  width: 100%;
+  transition: $transition;
+  z-index: 777;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 60px;
+  background: transparent;
+  @include flexCol();
+
+  &_active {
+    background: $color-blue-active;
+
+  }
+
+  &__container {
+    @include flexCol(space-between);
+    gap: 10px;
+    width: 100%;
+  }
+
+  &__logoBtn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  &__logo {
+    object-fit: contain;
+    max-width: 147px;
+
+    @include smScreenMedia {
+      max-width: 100px;
+    }
+  }
+
+  &__authBlock {
+    @include flexCol(flex-end);
+    gap: 28px;
+
+    @include smScreenMedia {
+      gap: 18px;
+    }
+  }
+
+  &__usernameBlock {
+    position: relative;
+    max-width: calc(100vw - 350px);
+
+    @include smScreenMedia {
+      max-width: calc(100vw - 190px);
+    }
+  }
+
+  &__usernameBtn {
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    @include setFont(20px, 500);
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @include smScreenMedia {
+      font-size: 16px;
+    }
+  }
+
+  &__options {
+    position: absolute;
+    right: 0;
+    top: 50px;
+    border: 1px solid $color-main;
+    background: $color-blue-bold;
+    padding: 16px;
+    border-radius: 20px;
+    @include flexCol();
+    min-width: 220px;
+  }
+
+  &__logoutBtnDesk {
+    @include smScreenMedia {
+      display: none;
+    }
+  }
+
+  &__logoutBtnMob {
+    display: none;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+
+    @include smScreenMedia {
+      display: block;
+    }
+  }
+
+  &__logoutIcon {
+    @include svg(24px, $color-white)
+  }
+}

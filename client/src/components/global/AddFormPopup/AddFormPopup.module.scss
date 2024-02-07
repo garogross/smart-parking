@@ -1,0 +1,26 @@
+@import "../../../styles/vars";
+@import "../../../styles/mixins";
+
+.addFormPopup {
+
+  &__form {
+    @include flexCol();
+    gap: 10px;
+    flex-direction: column;
+  }
+
+  &__label {
+    @include setFont(14px,500);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  &__btn {
+    max-width: 182px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 26px;
+  }
+}
