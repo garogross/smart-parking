@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {useFormValue} from "../../../hooks/useFormValue";
@@ -11,7 +11,7 @@ import LoadingPopup from "../../layout/LoadingPopup/LoadingPopup";
 
 import {emailImage, passwordImage,} from "../../../assets/images";
 import {errorIcon} from "../../../assets/svg";
-import {adminMainPagePath, mainPagePath} from "../../../router/path";
+import { mainPagePath} from "../../../router/path";
 import styles from "./AuthBlock.module.scss"
 
 const fields = [
@@ -39,11 +39,15 @@ function AuthBlock() {
     }, {})
     const {formData, onChange} = useFormValue(initialState)
 
+    useEffect(() => {
+        if(document.body.classList.contains('withSidebar')) document.body.classList.remove('withSidebar')
+        if(document.body.classList.contains('withSidebar_opened')) document.body.classList.remove('withSidebar_opened')
+    }, []);
+
     const onSubmitForm = (e) => {
         e.preventDefault()
-        const onSuccess = (isAdmin) => {
-            const navigateTo = isAdmin ? adminMainPagePath : mainPagePath
-            navigate(navigateTo)
+        const onSuccess = () => {
+            navigate(mainPagePath)
         }
         dispatch(login(formData,onSuccess))
     }

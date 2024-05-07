@@ -1,0 +1,144 @@
+@import "../../../../styles/vars";
+@import "../../../../styles/mixins";
+
+.sideBar__backdrop {
+  display: none;
+
+  @include mdScreenMedia {
+    display: block;
+  }
+}
+
+.sideBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 60px;
+  width: 60px;
+  background-color: $color-blue-bg;
+  border-right: 2px solid $color-border;
+  padding: 10px 4px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  z-index: 777;
+  transition: $transition;
+
+  &_active {
+    min-width: 250px;
+    width: 60px;
+  }
+
+  &__logoLink {
+    @include flexCol(flex-start);
+    gap: 10px;
+    margin-bottom: 20px;
+    text-decoration: none;
+    padding: 0 6px;
+  }
+
+  &__logoText {
+    @include setFont(18px, 500);
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+
+    @include mdScreenMedia {
+      font-size: 16px;
+    }
+  }
+
+  &__logoImage {
+    width: 40px;
+    border-radius: 50%;
+    object-fit: contain;
+  }
+
+  &__crossBtn {
+    display: none;
+
+    @include mdScreenMedia {
+      display: block;
+    }
+  }
+  &__menu {
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+  }
+
+  &__link {
+    padding: 10px 11px;
+    border-radius: 8px;
+    background: transparent;
+    @include flexCol(flex-start);
+    transition: $transition;
+    @include setFont(16px, 600, $color-white);
+    text-decoration: none;
+    gap: 10px;
+    margin-bottom: 8px;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: $color-blue-passive;
+    }
+
+    &_active {
+      background: $color-main;
+    }
+
+    span {
+      width: 100%;
+      overflow: hidden;
+    }
+  }
+
+  &__linkIcon {
+    @include svg(30px, $color-white);
+    display: block;
+    min-width: 30px;
+  }
+
+  &__linkArrowIcon {
+    @include svg(11px, transparent, 11px, $color-white);
+    display: block;
+    margin-left: auto;
+
+    &_active {
+      transform: rotate(180deg);
+    }
+  }
+
+
+  &__acardeon {
+    @include flexCol(flex-start, flex-start);
+    flex-direction: column;
+    overflow: hidden;
+    border-bottom: 1px solid $color-border;
+  }
+
+  &__acardeonItem {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    background: transparent;
+    @include flexCol(flex-start);
+    transition: $transition;
+    @include setFont(18px, 600, $color-main);
+    text-decoration: none;
+    gap: 10px;
+    margin-bottom: 8px;
+    white-space: nowrap;
+
+    &_active {
+      background: $color-white;
+    }
+  }
+
+  &__acardeonItemIcon {
+    @include svg(30px, $color-main, 30px, $color-main);
+    min-width: 30px;
+  }
+}

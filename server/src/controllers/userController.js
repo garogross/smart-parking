@@ -7,6 +7,8 @@ import {AppError} from "../utils/appError.js";
 import {catchAsync} from "../utils/catchAsync.js";
 
 import {userRoles} from "../constants.js";
+import mongoose from "mongoose";
+import {Tenant} from "../models/tenantModel.js";
 
 
 const handlerFactory = new HandlerFactory(User, 'user')
@@ -27,34 +29,37 @@ const createAndSendToken = (user, res, statusCode = 200) => {
     })
 }
 
-export const signUp = catchAsync(async (req, res, next) => {
-    const {fullName, username, password, role,profession} = req.body
+export const setFullName = catchAsync(async (req, res, next) => {
+    const {firstName, lastName, patronymic} = req.body
 
-    const user = await User.create({fullName, username, password, role,profession})
-    const token = signToken(user._id)
-    const {
-        password: pass,
-        __v,
-        ...userData
-    } = {...user.toObject()};
-    res.send({
-        status: 'success',
-        token,
-        data: userData,
-    })
+    if (!firstName) {
+        return next(new AppError('first name is required', 400, {firstName: "1"}))
+    }
+    if (!lastName) {
+        return next(new AppError('lastname is required', 400, {lastName: "1"}))
+    }
+    req.body.fullName = `${firstName}**${lastName}${patronymic ? '**' + patronymic : ""}`
+    next()
+})
+
+
+export const signUp = catchAsync(async (req, res, next) => {
+    await User.create(req.body)
+
+    next()
 })
 
 export const login = catchAsync(async (req, res, next) => {
     const {username, password} = req.body
 
     if (!username || !password) {
-        return next(new AppError('Пожалуйста, укажите имя пользователя или пароль', 400, {username: {}}))
+        return next(new AppError('Пожалуйста, укажите username или пароль', 400, {username: {}}))
     }
 
     const user = await User.findOne({
-    username: {
-        $regex: new RegExp(`^${username}$`, 'i')
-    }
+        username: {
+            $regex: new RegExp(`^${username}$`, 'i')
+        }
     }).select('+password')
 
     if (!user) {
@@ -71,49 +76,42 @@ export const login = catchAsync(async (req, res, next) => {
 })
 
 
-export const getAllUsers = catchAsync(async (req, res) => {
+export const getAllUsers = handlerFactory.getAll([
+    {
+        localField: "organization",
+        from: Tenant.collection.name
+    }
+],
+    (req) => ({'_id': {$ne: new mongoose.Types.ObjectId(req.user._id)}}),
+    {password: 0}
+)
 
-    const statment = req.user.role === userRoles.admin ?
-        {role: userRoles.employee} :
-        {
-            role: {$ne: userRoles.superAdmin},
-        }
 
-    const users = await User.find(statment).select(["fullName", "role","profession"])
-
-
-    res.send({
-        status: 'success',
-        data: {users}
-    })
-})
-
-export const updateUserData = handlerFactory.updateOne()
-
-export const deleteUser = handlerFactory.deleteOne()
+export const deleteUser = handlerFactory.deleteOne(true)
 
 export const changePassword = catchAsync(async (req,res,next) => {
-    const {currentPassword,newPassword} = req.body
-
-    if (!currentPassword) {
-        return next(new AppError('current password fields are required', 400,{currentPassword: "1"}))
-    }
-    if (!newPassword) {
-        return next(new AppError('new password fields are required', 400,{newPassword: "1"}))
+    const {password,passwordConfirm} = req.body
+    if(!password && !passwordConfirm) return next()
+    if(password !== passwordConfirm) {
+        return next(new AppError('password are not equal', 400,{passwordConfirm: "1",password: '1'}))
     }
 
-    const user = await User.findById(req.user.id).select("+password")
-    const correctPassword = await user.comparePassword(currentPassword,user.password)
+    const user = await User.findById(req.params.id || req.user.id).select("+password")
 
-    if(!correctPassword) {
-        return next(new AppError("currentPassword is wrong.",400,{currentPassword: "1"}))
-    }
 
-    if(!user) {
-        return next(new AppError("You're not logged in.",401))
-    }
 
-    user.password = newPassword
+    user.password = password
     await user.save()
-    createAndSendToken(user, res)
+
+    if(req.params.id) {
+        return next()
+    } else {
+        res.send({
+            status: 'success',
+            data: user
+        })
+    }
 })
+export const updateUser = handlerFactory.updateOne(true)
+export const getOneUser = handlerFactory.getOne('organization')
+export const updateProfile = handlerFactory.updateOne(true)

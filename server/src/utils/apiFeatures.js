@@ -14,11 +14,13 @@ export class ApiFeatures {
         const queryStr = JSON.stringify(queryCopy)
         const queryObj = JSON.parse(queryStr.replace(/\b(gt|gte|lt|lte)\b/g, match => `$${match}`))
         for(let key in queryObj) {
-            if(key.endsWith('-regex')) {
-                const originalKey = key.replace("-regex","")
-                queryObj[originalKey] = new RegExp(queryObj[key], 'i')
+            let originalKey = key
+            if(key.includes('--')) {
+                originalKey = key.replace('--','.')
+                queryObj[originalKey] = queryObj[key]
                 delete queryObj[key]
             }
+                queryObj[originalKey] = new RegExp(`^${queryObj[originalKey]}`, 'i')
         }
         if(getQueryObj) return queryObj
         this.query.find(queryObj)
@@ -35,8 +37,10 @@ export class ApiFeatures {
     }
 
     paginate () {
+        if(+this.queryString.page === 0) return this;
+
         const page = +this.queryString.page || 1
-        const limit = +this.queryString.limit || 15
+        const limit = +this.queryString.limit || process.env.PAGE_LIMIT
         const skip = (page - 1) * limit
         this.query.skip(skip).limit(limit)
 

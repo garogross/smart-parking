@@ -1,0 +1,87 @@
+@import "../../../../styles/vars";
+@import "../../../../styles/mixins";
+
+
+.tableTitlesCol {
+  @include flexCol(center, stretch);
+  position: relative;
+  gap: 10px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid $color-border;
+
+  &__loader {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100px;
+    height: 2px;
+    background-color: $color-main;
+    animation: loader 2s linear infinite;
+    animation-direction: alternate;
+  }
+
+  &__item {
+    border-left: 1px solid $color-polo-blue;
+    padding-left: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    justify-content: space-between;
+    overflow: clip;
+    overflow-clip-margin: 500px;
+  }
+
+  &__itemBtn {
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    display: flex;
+    gap: 4px;
+  }
+  &__sortIcon {
+    @include svg(20px,$color-polo-blue);
+    transform: rotate(180deg);
+    min-width: 20px;
+
+    &__reversed {
+      transform: rotate(0deg);
+    }
+  }
+
+  &__itemText {
+    @include setFont(16px, 600, $color-polo-blue);
+    text-align: left;
+  }
+
+  &__filterInput {
+    background-color: $color-input-bg;
+    border-radius: 10px;
+    padding: 6px 8px;
+    @include setFont(16px, 400);
+    border: 1px solid $color-polo-blue;
+    outline: none;
+    transition: $transition;
+    width: 100%;
+
+    &:hover, &:focus {
+      border-color: $color-main;
+    }
+
+    &::placeholder {
+      color: #585859;
+    }
+
+    &[type="date"] {
+      display: block;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      min-height: 40px;
+    }
+  }
+}
+
+@keyframes loader {
+  from {left: 0}
+  to {left: calc(100% - 100px)}
+}
+

@@ -9,8 +9,13 @@ import {AppError} from "./src/utils/appError.js";
 import {globalErrorHandler} from "./src/controllers/errorController.js";
 
 // ROUTES1
-import {userRoutes} from "./src/routes/userRoutes.js";
+import {parkingRouter} from "./src/routes/parkingRoutes.js";
+import {tenantRouter} from "./src/routes/tenantRoutes.js";
+import {employeeRouter} from "./src/routes/employeeRoutes.js";
+import {carRouter} from "./src/routes/carRoutes.js";
+import {historyRouter} from "./src/routes/historyRoutes.js";
 import bodyParser from "body-parser";
+import {userRouter} from "./src/routes/userRoutes.js";
 
 export const app = express()
 
@@ -53,7 +58,12 @@ app.use(hpp({
 app.use('/api', express.static('public'));
 
 // ROUTES2
-app.use('/api/v1/users', userRoutes)
+app.use('/api/v1/parking', parkingRouter)
+app.use('/api/v1/tenants', tenantRouter)
+app.use('/api/v1/users', userRouter)
+app.use('/api/v1/employees', employeeRouter)
+app.use('/api/v1/cars', carRouter)
+app.use('/api/v1/history', historyRouter)
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} in this server`, 404))

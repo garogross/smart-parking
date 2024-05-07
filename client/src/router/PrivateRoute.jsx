@@ -5,22 +5,23 @@ import {lsProps} from "../utils/lsProps";
 import {getLSItem} from "../utils/functions/localStorage";
 import {userRoles} from "../constants";
 
-const PrivateRoute = ({element,noAuth,isAdmin}) => {
+const PrivateRoute = ({element,noAuth,roles}) => {
    const token = getLSItem(lsProps.token)
    const user = getLSItem(lsProps.user,true)
    const isAuthenticated = !token || !user
    const statement = noAuth ?
        !isAuthenticated :
-       isAuthenticated  || (isAdmin && user.role === userRoles.employee) || (!isAdmin && user.role !== userRoles.employee)
+       isAuthenticated  || roles && !roles.includes(user.role)
    let navigateTo = loginPagePath
+
    if(!isAuthenticated) {
-      navigateTo = user.role !== userRoles.employee ? adminMainPagePath : mainPagePath
+      navigateTo =  mainPagePath
    } else {
       if(noAuth) {
-         navigateTo = isAdmin ? adminMainPagePath : mainPagePath
+         navigateTo = mainPagePath
       }
-      // if(isAdmin) navigateTo = `/admin${navigateTo}`
    }
+
    return (
        statement ? <Navigate to={navigateTo} replace={true} /> : element
    )

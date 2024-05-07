@@ -3,30 +3,38 @@ import express from "express";
 import {
     changePassword,
     deleteUser,
-    getAllUsers,
-    login,
-    signUp,
-    updateUserData
+    getAllUsers, getOneUser,
+    login, setFullName,
+    signUp, updateProfile, updateUser,
 } from "../controllers/userController.js";
 import {protect, restrictTo} from "../controllers/authController.js";
 import {signupRestrictToParams, userRoles} from "../constants.js";
 
-export const userRoutes = express.Router()
+export const userRouter = express.Router()
 
-userRoutes.post('/login', login)
+userRouter.post('/login', login)
 
 const restricts = signupRestrictToParams()
-userRoutes.post('/signup',
+userRouter.post('/signup',
     protect,
     restrictTo(...restricts),
-    signUp
+    setFullName,
+    signUp,
+    getAllUsers
 )
 
-userRoutes.use(protect)
+userRouter.use(protect)
+restrictTo(userRoles.admin)
 
-userRoutes.patch("/updatePassword",changePassword)
+userRouter.get('/',getAllUsers)
+userRouter.patch(
+    '/profile',
+    setFullName,
+    updateProfile,
+    changePassword,
+)
 
-userRoutes.use(restrictTo(userRoles.admin,userRoles.superAdmin))
-userRoutes.get('/', getAllUsers)
-userRoutes.patch('/:id', updateUserData)
-userRoutes.delete('/:id', deleteUser)
+userRouter.route('/:id')
+    .delete(deleteUser,getAllUsers)
+    .get(getOneUser)
+    .patch(setFullName,updateUser,changePassword,getAllUsers)

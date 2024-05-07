@@ -26,27 +26,46 @@ export const authConfig = (isFormData) => {
 
 // auth
 export const siginUrl = '/users/login'
-export const updatePasUrl = '/users/updatePassword'
-
-// cards
-export const getCardsUrl = '/cards/'
-export const createCardsUrl = '/cards/create'
-
-// payments
-export const getPaymentsUrl = '/payments/'
-export const createPaymentsUrl = '/payments/create/'
-export const downloadFileUrl = '/payments/download/'
-export const deletePaymentUrl = '/payments/delete/'
+export const updateProfileUrl = '/users/profile'
 
 // users
 export const getUsersUrl = '/users/'
 export const signupUserUrl = '/users/signup'
 
+// tenants
+export const getTenantsNameListUrl = '/tenants/nameList'
+export const getTenantsUrl = '/tenants/'
+export const addTenantsUrl = '/tenants/create'
+
+// employees
+export const getEmployeesUrl = '/employees/'
+export const getOneEmployeeUrl = '/employees/getOne/'
+export const addEmployeesUrl = '/employees/create'
+
+// parking
+export const getParkingUrl = '/parking/'
+
+// history
+export const getHistoryUrl = '/history/'
+export const downloadHistoryUrl = '/history/download/'
+
+
 
 export const fetchRequest = async (fetchUrl, method = 'GET', body = null, config = authConfig()) => {
+
+    const filteredBody = {}
+
+    if(body) {
+        for (let key in body) {
+            if(body[key]) {
+                filteredBody[key] =  body[key]
+            }
+        }
+    }
+
     const response = await fetch(`${baseUrl}${fetchUrl}`, {
         method: method,
-        body: body,
+        body: body && JSON.stringify(filteredBody),
         ...config
     });
     const resData = await response.json();
@@ -67,7 +86,13 @@ export const setError = (text) => {
 }
 
 export const setFormError = (type,error) => dispatch => {
-    const payload = error?.message?.error?.errors || error
-
+    let payload =  error
+    if(error?.message?.message?.startsWith('E11000')) {
+        payload = error?.message?.error?.keyValue
+    }else if(error?.message?.error?.code === 11000) {
+        payload = error?.message?.error.keyValue
+    } else if(error?.message?.error?.errors) {
+        payload = error?.message?.error?.errors
+    }
     dispatch({type,payload})
 }

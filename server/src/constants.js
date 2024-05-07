@@ -4,10 +4,24 @@ import {dirname} from "path"
 const __filename = fileURLToPath(import.meta.url);
 export const DIRNAME = dirname(__filename);
 
+
 export const userRoles = {
-    employee: "сотрудник",
-    admin: "admin",
-    superAdmin: "superAdmin",
+    tenant: "Арендатор",
+    admin: "Admin",
+    security: "Охраник",
+    moderator: "Модератор",
+}
+
+export const tariffTypes = {
+    unLimit: "Безлимитный",
+    perMonth: "Тариф с оплатой за месяц ",
+    perHour: "Почасовой Тариф",
+    Guest: "Гостевой тариф",
+}
+
+export const historyActionTypes = {
+    entry: "Въезд",
+    exit: "Выезд",
 }
 
 export const nodeEnvTypes = {
@@ -16,6 +30,18 @@ export const nodeEnvTypes = {
 }
 
 export const signupRestrictToParams = () => {
-    const {admin,superAdmin} = userRoles
-    return process.env.NODE_ENV !== nodeEnvTypes.production ? Object.values(userRoles) : [admin,superAdmin]
+    return process.env.NODE_ENV !== nodeEnvTypes.production ? Object.values(userRoles) : [userRoles.admin]
 }
+
+export const historyStatusTypes = {
+    exist: 'В базе',
+    notExist: 'Отсуствует в базе',
+}
+
+export const downloadFileFormats = [
+    'html',
+    'csv',
+    'txt',
+    'json',
+    'xls',
+]

@@ -1,32 +1,45 @@
 import React, {Fragment, useEffect} from "react";
 import {checkIsLoggedIn} from "../../redux/action/auth";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Outlet, Route, Routes} from 'react-router-dom';
 
-import TopBar from "../global/TopBar/TopBar";
 
 import {routes} from "../../router/path";
+import Navbar from "../global/Navbar/Navbar";
 
 function App() {
     const dispatch = useDispatch()
+    const token = useSelector(state => state.auth.token)
+    const user = useSelector(state => state.auth.user)
 
     useEffect(() => {
         dispatch(checkIsLoggedIn())
     }, []);
 
+    useEffect(() => {
+        if(token && user) {
+            document.body.classList.add('withSidebar')
+        }
+    }, [token]);
+
     return (
         <>
-            <TopBar/>
+            {
+                token && user ?
+                    <Navbar/>
+                    : null
+            }
             <Routes>
                 {
                     routes.map(({path, component, children}, index) => (
-                        <Fragment key={index}>
+                        <Fragment
+                            key={index}>
                             {
                                 children ?
                                     <Route path={path} element={<Outlet/>}>
                                         <Route index element={component}/>
                                         {
-                                            children.map((child,childIndex) => (
+                                            children.map((child, childIndex) => (
                                                 <Route path={child.path} element={child.component} key={childIndex}/>
                                             ))
                                         }

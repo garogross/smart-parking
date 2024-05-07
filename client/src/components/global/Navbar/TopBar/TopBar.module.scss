@@ -1,0 +1,97 @@
+@import "../../../../styles/vars";
+@import "../../../../styles/mixins";
+
+
+.topBar {
+  @include flexCol(space-between);
+  position: fixed;
+  top: 0;
+  transition: $transition;
+  z-index: 777;
+  background: $color-blue-active;
+  padding: 6px $container-padding;
+  width: calc(100% - $sideBar-closed-width);
+
+  @include mdScreenMedia {
+    padding-left: $container-padding-mob;
+    padding-right: $container-padding-mob;
+  }
+
+  &_burgerOpened {
+    width: calc(100% - $sideBar-opened-width);
+
+    @include mdScreenMedia {
+      width: calc(100% - $sideBar-closed-width);
+    }
+  }
+
+  &__burgerBtn {
+    border: none;
+    background: transparent;
+    transition: $transition;
+    cursor: pointer;
+  }
+
+  &__burgerIcon {
+    @include svg(26px, $color-white);
+  }
+
+  &__authBlock {
+    @include flexCol(flex-end);
+    gap: 28px;
+
+    @include smScreenMedia {
+      gap: 18px;
+    }
+  }
+
+
+  &__usernameBtn {
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    @include setFont(20px, 500);
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-decoration: none;
+    text-overflow: ellipsis;
+
+    @include smScreenMedia {
+      font-size: 16px;
+    }
+  }
+
+
+  &__logoutBtnDesk {
+    @include smScreenMedia {
+      display: none;
+    }
+  }
+
+  &__logoutBtnMob {
+    display: none;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+
+    @include smScreenMedia {
+      display: block;
+    }
+  }
+
+  &__logoutIcon {
+    @include svg(24px, $color-white)
+  }
+
+
+  &__distanceBlock {
+    transition: $transition;
+    width: 100%;
+    height: 0;
+
+    &_active {
+      height: 56px;
+    }
+  }
+}

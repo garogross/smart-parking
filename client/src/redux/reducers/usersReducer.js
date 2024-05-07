@@ -1,10 +1,17 @@
 import {
     ADD_USERS_ERROR,
     ADD_USERS_LOADING_START,
-    ADD_USERS_SUCCESS, DELETE_USER_ERROR, DELETE_USER_LOADING_START, DELETE_USER_SUCCESS,
+    ADD_USERS_SUCCESS,
+    DELETE_USER_ERROR,
+    DELETE_USER_LOADING_START,
+    DELETE_USER_SUCCESS, EDIT_USER_ERROR,
+    EDIT_USER_LOADING_START,
+    EDIT_USER_SUCCESS,
     GET_USERS_ERROR,
     GET_USERS_LOADING_START,
-    GET_USERS_SUCCESS, RESET_USER_STATE,
+    GET_USERS_SUCCESS,
+    RESET_USER_STATE,
+    SET_USERS_PAGE,
 } from "../types";
 
 
@@ -16,6 +23,10 @@ const initialState = {
     addError: null,
     deleteLoading: false,
     deleteError: null,
+    editLoading: false,
+    editError: null,
+    totalCount: 0,
+    page: 1,
 }
 
 export const usersReducer = (state = initialState, action) => {
@@ -25,8 +36,9 @@ export const usersReducer = (state = initialState, action) => {
         case GET_USERS_SUCCESS: {
             return {
                 ...state,
-                data: payload,
-                getLoading: false
+                data: payload.data,
+                getLoading: false,
+                totalCount: payload.totalCount ?? state.totalCount,
             }
         }
         case GET_USERS_LOADING_START: {
@@ -46,8 +58,9 @@ export const usersReducer = (state = initialState, action) => {
         case ADD_USERS_SUCCESS: {
             return {
                 ...state,
-                data: payload,
-                addLoading: false
+                data: payload.data,
+                addLoading: false,
+                totalCount: payload.totalCount
             }
         }
         case ADD_USERS_LOADING_START: {
@@ -67,8 +80,9 @@ export const usersReducer = (state = initialState, action) => {
         case DELETE_USER_SUCCESS: {
             return {
                 ...state,
-                data: payload,
-                deleteLoading: false
+                data: payload.data,
+                deleteLoading: false,
+                totalCount: payload.totalCount
             }
         }
         case DELETE_USER_LOADING_START: {
@@ -83,6 +97,36 @@ export const usersReducer = (state = initialState, action) => {
                 ...state,
                 deleteError: payload,
                 deleteLoading: false
+            }
+        }
+
+        case EDIT_USER_SUCCESS: {
+            return {
+                ...state,
+                data: payload.data,
+                editLoading: false,
+                totalCount: payload.totalCount
+            }
+        }
+        case EDIT_USER_LOADING_START: {
+            return {
+                ...state,
+                editLoading: true,
+                editError: null,
+            }
+        }
+        case EDIT_USER_ERROR: {
+            return {
+                ...state,
+                editError: payload,
+                editLoading: false
+            }
+        }
+
+        case SET_USERS_PAGE: {
+            return {
+                ...state,
+                page: payload
             }
         }
 
