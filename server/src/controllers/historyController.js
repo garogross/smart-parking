@@ -1,15 +1,12 @@
-import {History} from "../models/historyModel.js";
+import mongoose from "mongoose";
 import {HandlerFactory} from "./HandlerFactory.js";
+import {History} from "../models/historyModel.js";
 import {Car} from "../models/carModel.js";
 import {Employee} from "../models/employeeModel.js";
 import {Tenant} from "../models/tenantModel.js";
-import mongoose from "mongoose";
+
 import {catchAsync} from "../utils/catchAsync.js";
-import {DIRNAME, downloadFileFormats, historyActionTypes, historyStatusTypes} from "../constants.js";
-import {AppError} from "../utils/appError.js";
-import fs from "fs";
-import path from "path";
-import {fileTemplates} from "../utils/fileTemplates/fileTemplates.js";
+import { historyActionTypes, historyStatusTypes} from "../constants.js";
 import {formatDate} from "../utils/date.js";
 import {formatFullName} from "../utils/formatFullName.js";
 

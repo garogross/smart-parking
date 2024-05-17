@@ -55,15 +55,15 @@ historySchema.pre('save', async function (next) {
         await Parking.findOneAndDelete(plateNumber)
     }
     if (car) {
-            const {organization} = car.owner
-            const sum = isEntry ? 1 : -1
-            const inSiteCarCount = organization.inSiteCarCount
-            if (inSiteCarCount || (!inSiteCarCount && sum === 1)) {
-                await Tenant.findByIdAndUpdate(organization._id, {inSiteCarCount: inSiteCarCount + sum})
-            }
-            if (car.owner.isInPark !== isEntry) {
-                await Employee.findByIdAndUpdate(car.owner._id, {isInPark: isEntry})
-            }
+        const {organization} = car.owner
+        const sum = isEntry ? 1 : -1
+        const inSiteCarCount = organization.inSiteCarCount
+        if (inSiteCarCount || (!inSiteCarCount && sum === 1)) {
+            await Tenant.findByIdAndUpdate(organization._id, {inSiteCarCount: inSiteCarCount + sum})
+        }
+        if (car.owner.isInPark !== isEntry) {
+            await Employee.findByIdAndUpdate(car.owner._id, {isInPark: isEntry})
+        }
     }
 
 })
