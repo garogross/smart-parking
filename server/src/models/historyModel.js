@@ -31,13 +31,21 @@ const historySchema = new mongoose.Schema({
 historySchema.pre('save', async function (next) {
     const now = Date.now()
     this.date = now
-    const {car, plateNumber, type} = this
+    const { plateNumber, type} = this
 
+    const car = await Car.findOne({plateNumber}).populate({
+        path: 'owner',
+        populate: {path: 'organization'} // Populate the cars of each employee
+    })
+    const carId = car?._id || null
+
+    console.log({plateNumber,car})
+    this.car = carId
     const isEntry = type === historyActionTypes.entry
 
     if (isEntry) {
         const data = {
-            car: car || null,
+            car: carId || null,
             plateNumber,
             entryDate: now
         }
@@ -47,23 +55,15 @@ historySchema.pre('save', async function (next) {
         await Parking.findOneAndDelete(plateNumber)
     }
     if (car) {
-        const curCar = await Car.findById(car).populate({
-            path: 'owner',
-            populate: {path: 'organization'} // Populate the cars of each employee
-        })
-
-        if (curCar) {
-            const {organization} = curCar.owner
+            const {organization} = car.owner
             const sum = isEntry ? 1 : -1
             const inSiteCarCount = organization.inSiteCarCount
             if (inSiteCarCount || (!inSiteCarCount && sum === 1)) {
                 await Tenant.findByIdAndUpdate(organization._id, {inSiteCarCount: inSiteCarCount + sum})
             }
-            if (curCar.owner.isInPark !== isEntry) {
-                await Employee.findByIdAndUpdate(curCar.owner._id, {isInPark: isEntry})
-
+            if (car.owner.isInPark !== isEntry) {
+                await Employee.findByIdAndUpdate(car.owner._id, {isInPark: isEntry})
             }
-        }
     }
 
 })

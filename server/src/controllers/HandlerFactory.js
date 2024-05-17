@@ -1,6 +1,5 @@
 import {catchAsync} from "../utils/catchAsync.js";
 import {AppError} from "../utils/appError.js";
-import {ApiFeatures} from "../utils/apiFeatures.js";
 import {isValidDate} from "../utils/date.js";
 
 export class HandlerFactory {
@@ -105,7 +104,7 @@ export class HandlerFactory {
         const {Model, docName} = this
         return catchAsync(async (req, res, next) => {
             let match = filterBy ? filterBy(req) : {}
-            const {page, ...query} = req.query
+            const {page,sortBy, ...query} = req.query
             const booleanProps = [
                 {
                     str: 'true',
@@ -126,8 +125,8 @@ export class HandlerFactory {
                     match[originalKey] = {
                         $eq: +query[key]
                     }
-                }else if (isValidDate(query[key])) {
-                    const date  = new Date(query[key])
+                } else if (isValidDate(query[key])) {
+                    const date = new Date(query[key])
 
                     const nextDay = new Date(date)
                     nextDay.setDate(date.getDate() + 1)
@@ -135,8 +134,8 @@ export class HandlerFactory {
                         $lt: nextDay,
                         $gte: date
                     }
-                } else if(booleanItem) {
-                    match[originalKey] = { $exists: booleanItem.bool }
+                } else if (booleanItem) {
+                    match[originalKey] = {$exists: booleanItem.bool}
                 } else {
                     match[originalKey] = {$regex: `^${query[key]}`, $options: 'i'}
                 }
@@ -188,6 +187,14 @@ export class HandlerFactory {
                     ...aggregateOptions
                 ]
             }
+            if (sortBy) {
+                const sortByOptions = {
+                    "$sort": {
+                        [sortBy.slice(0, sortBy.length - 1).replaceAll('--','.')]: sortBy.slice(sortBy.length - 1) === '-' ? -1 : 1 // or 1 for ascending order
+                    }
+                }
+                aggregateOptions.push(sortByOptions)
+            }
             if (project) aggregateOptions.push({$project: project})
             aggregateOptions.push({
                 $facet: {
@@ -197,7 +204,6 @@ export class HandlerFactory {
                     data: aggregateData
                 }
             })
-
 
             let doc = await Model.aggregate(aggregateOptions)
             if (!doc[0]) return next(new AppError(`${docName} not found`))

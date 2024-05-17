@@ -23,6 +23,14 @@ const filterByOrganization = (req) => (
 )
 
 export const createHistory = handleFactory.create()
+
+export const createHistoryFunc = async (data) => {
+    try {
+        await History.create(data)
+    } catch (e) {
+        console.log("createHistory Error",e)
+    }
+}
 export const getAllHistory = handleFactory.getAll(
     [
         {
