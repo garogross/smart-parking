@@ -58,9 +58,9 @@ function EmployeesList() {
         setNotPopupText(notPopupTexts.employee.delete)
     }
 
-    const getData = (filters, page) => {
+    const getData = (filters, page,sortBy) => {
         if (page !== curPage) dispatch(setEmployeesPage(page))
-        dispatch(getEmployees(id,filters))
+        dispatch(getEmployees(id,filters,sortBy))
     }
 
     const headerActions = [

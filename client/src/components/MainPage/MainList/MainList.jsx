@@ -24,11 +24,11 @@ function MainList(props) {
     const getLoading = useSelector(state => state[curState].getLoading)
 
 
-    const getData = (filters, page) => {
+    const getData = (filters, page,sortBy) => {
         const setPage = (page) => isAdmin ? setTenantsPage(page) : setParkingPage(page)
         if (page !== curPage) dispatch(setPage(page))
         const getId = role === userRoles.tenant ? user.organization : null
-        const getFunc = () => isAdmin ? getTenants() : getParking(getId)
+        const getFunc = () => isAdmin ? getTenants({},sortBy) : getParking(getId,sortBy)
         dispatch(getFunc(filters))
     }
 

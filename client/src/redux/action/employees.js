@@ -22,11 +22,11 @@ import {
 } from "./fetchTools";
 import {getUrlWithFiltersQuery} from "./getUrlWithFiltersQuery";
 
-export const getEmployees = (id,filters) => async (dispatch,getState) => {
+export const getEmployees = (id,filters,sortBy) => async (dispatch,getState) => {
     dispatch({type: GET_EMPLOYEES_LOADING_START})
     try {
         const page = getState().employees.page
-        const url = dispatch(getUrlWithFiltersQuery(getEmployeesUrl+id,page,filters))
+        const url = dispatch(getUrlWithFiltersQuery(getEmployeesUrl+id,page,filters,sortBy))
         const {data, totalCount} = await fetchRequest(url)
 
         dispatch({

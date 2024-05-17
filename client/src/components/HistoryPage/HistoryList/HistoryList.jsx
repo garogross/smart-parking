@@ -19,10 +19,10 @@ function HistoryList() {
     const curPage = useSelector(state => state.history.page)
     const getLoading = useSelector(state => state.history.getLoading)
 
-    const getData = (filters, page) => {
+    const getData = (filters, page,sortBy) => {
         if (page !== curPage) dispatch(setHistoryPage(page))
         const getId = role === userRoles.tenant ? user.organization : null
-        dispatch(getHistory(filters,getId))
+        dispatch(getHistory(filters,getId,sortBy))
     }
 
     const headerActions = [

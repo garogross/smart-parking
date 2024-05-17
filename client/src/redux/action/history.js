@@ -11,12 +11,12 @@ import {
 } from "./fetchTools";
 import {getUrlWithFiltersQuery} from "./getUrlWithFiltersQuery";
 
-export const getHistory = (filters,id) => async (dispatch,getState) => {
+export const getHistory = (filters,id,sortBy) => async (dispatch,getState) => {
     dispatch({type: GET_HISTORY_LOADING_START})
     try {
         const page = getState().history.page
         const idParam = id || ""
-        const url = dispatch(getUrlWithFiltersQuery(getHistoryUrl+idParam,page,filters))
+        const url = dispatch(getUrlWithFiltersQuery(getHistoryUrl+idParam,page,filters,sortBy))
         const {data, totalCount} = await fetchRequest(url)
 
         dispatch({

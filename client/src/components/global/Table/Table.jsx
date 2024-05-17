@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import ListPagination from "../ListPagination/ListPagination";
 import TableTitlesCol from "./TableTitlesCol/TableTitlesCol";
@@ -21,7 +21,6 @@ function Table({
     const [sortBy, setSortBy] = useState("")
 
 
-
     const onChangeListPage = (page) => {
         scrollTop()
         getData(null,page)
@@ -32,43 +31,12 @@ function Table({
         getData(filters,1)
     }
 
-    let sortedData = data
-
-    if (sortBy) {
-        const sortFunc = (a, b) => {
-            const key = sortBy.slice(0, sortBy.length - 1)
-            let aKey = a?.[key]
-            let bKey = b?.[key]
-            const keys = key.split('--')
-            if(keys.length > 1) {
-                keys.forEach((item,index) => {
-                    if(!index) {
-                        aKey = a?.[item] ?? ""
-                        bKey = b?.[item] ?? ""
-                    } else {
-                        aKey = aKey?.[item] ?? ""
-                        bKey = bKey?.[item] ?? ""
-                    }
-                })
-            }
-            if(!isNaN(+a[key])) {
-                return sortBy.endsWith('+') ? aKey - bKey : bKey - aKey
-            }
-            const curCol = cols.find(item => item.key === key)
-            const isDate = curCol?.type === "date"
-            aKey = isDate ? new Date(aKey) : aKey.toLowerCase()
-            bKey = isDate ? new Date(bKey) : bKey.toLowerCase()
-
-            return (
-                sortBy.endsWith('+') ?
-                    aKey < bKey ? -1 : 1
-                    :
-                    aKey > bKey ? -1 : 1
-            )
-        }
-
-        sortedData = data.sort(sortFunc)
+    const onSortChange = (sortBy,filters) => {
+        setSortBy(sortBy)
+        getData(filters,page,sortBy)
     }
+
+
 
     return (
         <>
@@ -80,13 +48,13 @@ function Table({
                         flexCols={flexCols}
                         cols={cols}
                         sortBy={sortBy}
-                        setSortBy={setSortBy}
+                        onSortChange={onSortChange}
                         dataLength={data.length}
                         onFiltersChange={onFiltersChange}
                     />
                     <TableColList
                         loading={loading}
-                        sortedData={sortedData}
+                        sortedData={data}
                         cols={cols}
                         titles={titles}
                         flexCols={flexCols}

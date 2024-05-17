@@ -56,11 +56,11 @@ export const getTenantsNameList = () => async (dispatch) => {
     }
 }
 
-export const getTenants = (filters = {}) => async (dispatch,getState) => {
+export const getTenants = (filters = {},sortBy) => async (dispatch,getState) => {
     dispatch({type: GET_TENANTS_LOADING_START})
     try {
         const page = getState().tenants.page
-        const url = dispatch(getUrlWithFiltersQuery(getTenantsUrl,page,filters))
+        const url = dispatch(getUrlWithFiltersQuery(getTenantsUrl,page,filters,sortBy))
         const {data, totalCount} = await fetchRequest(url)
 
 

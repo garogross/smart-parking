@@ -1,6 +1,6 @@
 import {fullNameChain} from "../../constants";
 
-export const getUrlWithFiltersQuery = (url,page,filters = {}) => (dispatch,getState) => {
+export const getUrlWithFiltersQuery = (url,page,filters = {},sortBy) => (dispatch,getState) => {
     let filtersQuery = ""
     if (filters) {
         for (let key in filters) {
@@ -11,5 +11,5 @@ export const getUrlWithFiltersQuery = (url,page,filters = {}) => (dispatch,getSt
             filtersQuery += `&${key}=${value}`
         }
     }
-    return `${url}?page=${page}${filtersQuery}`
+    return `${url}?page=${page}${filtersQuery}${sortBy ? `&sortBy=${sortBy}` : ""}`
 }

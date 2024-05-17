@@ -45,9 +45,9 @@ function TenantsList() {
     }
 
 
-    const getData = (filters, page) => {
+    const getData = (filters, page,sortBy) => {
         if (page !== curPage) dispatch(setTenantsPage(page))
-        dispatch(getTenants(filters))
+        dispatch(getTenants(filters,sortBy))
     }
 
     const headerActions = [

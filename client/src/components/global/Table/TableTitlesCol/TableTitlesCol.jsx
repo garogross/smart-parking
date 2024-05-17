@@ -14,7 +14,7 @@ function TableTitlesCol({
                             sortBy,
                             onFiltersChange,
                             dataLength,
-                            setSortBy
+                            onSortChange
                         }) {
     const filtersTimeOutRef = useRef(null)
 
@@ -34,13 +34,14 @@ function TableTitlesCol({
     }, [filters]);
 
     const onSort = (key) => {
-        setSortBy(prevState => {
-            if (prevState && prevState.startsWith(key)) {
-                return prevState.endsWith('+') ? key + "-" : key + "+"
+        let sortByVal = ""
+            if (sortBy && sortBy.startsWith(key)) {
+                sortByVal = sortBy.endsWith('+') ? key + "-" : key + "+"
             } else {
-                return key + "-"
+                sortByVal = key + "-"
             }
-        })
+
+        onSortChange(sortByVal,filters)
     }
 
     const onSelectFilter = (key, value) => {

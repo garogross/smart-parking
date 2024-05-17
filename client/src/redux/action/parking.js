@@ -22,12 +22,12 @@ import {
 } from "./fetchTools";
 import {getUrlWithFiltersQuery} from "./getUrlWithFiltersQuery";
 
-export const getParking = (id) => async (dispatch,getState) => {
+export const getParking = (id,sortBy) => async (dispatch,getState) => {
     dispatch({type: GET_PARKING_LOADING_START})
     try {
         const page = getState().parking.page
         const idParam = id || ""
-        const url = dispatch(getUrlWithFiltersQuery(getParkingUrl+idParam,page))
+        const url = dispatch(getUrlWithFiltersQuery(getParkingUrl+idParam,page,null,sortBy))
         const {data, totalCount} = await fetchRequest(url)
 
         dispatch({

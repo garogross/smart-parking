@@ -42,9 +42,9 @@ function UsersList() {
     }
 
 
-    const getData = (filters, page) => {
+    const getData = (filters, page,sortBy) => {
         if (page !== curPage) dispatch(setUsersPage(page))
-        dispatch(getUsers(filters))
+        dispatch(getUsers(filters,sortBy))
     }
 
     const headerActions = [

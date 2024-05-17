@@ -17,11 +17,11 @@ import {getUrlWithFiltersQuery} from "./getUrlWithFiltersQuery";
 
 export const formatData = (data,userid) =>  data.filter(item => item._id !== userid)
 
-export const getUsers = (filters) => async (dispatch,getState) => {
+export const getUsers = (filters,sortBy) => async (dispatch,getState) => {
     dispatch({type: GET_USERS_LOADING_START})
     try {
         const page = getState().users.page
-        const url = dispatch(getUrlWithFiltersQuery(getUsersUrl,page,filters))
+        const url = dispatch(getUrlWithFiltersQuery(getUsersUrl,page,filters,sortBy))
         const {data, totalCount} = await fetchRequest(url)
 
 
