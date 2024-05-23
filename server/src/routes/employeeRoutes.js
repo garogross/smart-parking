@@ -3,7 +3,7 @@ import {protect, restrictTo} from "../controllers/authController.js";
 import {
     createEmployee,
     deleteEmployee,
-    getAllEmployee, getOneEmployee,
+    getAllEmployee, getAllEmployeeMiddleware, getEmployeesReport, getOneEmployee, setEmployeesReportDates,
     updateEmployee
 } from "../controllers/employeeController.js";
 import {userRoles} from "../constants.js";
@@ -30,6 +30,15 @@ employeeRouter
     .delete(deleteEmployee, getAllEmployee)
 
 employeeRouter.get('/getOne/:id', getOneEmployee)
+
+
+employeeRouter.get(
+    '/report/:id',
+    restrictTo(admin),
+    setEmployeesReportDates,
+    getAllEmployeeMiddleware,
+    getEmployeesReport
+)
 
 
 

@@ -32,7 +32,6 @@ historySchema.pre('save', async function (next) {
     const now = Date.now()
     this.date = now
     const { plateNumber, type} = this
-
     const car = await Car.findOne({plateNumber}).populate({
         path: 'owner',
         populate: {path: 'organization'} // Populate the cars of each employee
@@ -42,7 +41,7 @@ historySchema.pre('save', async function (next) {
     console.log({plateNumber,car})
     this.car = carId
     const isEntry = type === historyActionTypes.entry
-
+    
     if (isEntry) {
         const data = {
             car: carId || null,

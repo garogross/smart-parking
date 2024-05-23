@@ -1,9 +1,27 @@
 import mongoose from "mongoose";
 import {setRequiredProp} from "../utils/setRequiredProp.js";
-import {tariffTypes} from "../constants.js";
+import {monthsShort, tariffTypes} from "../constants.js";
 import {Car} from "./carModel.js";
 import {Employee} from "./employeeModel.js";
 import {User} from "./userModel.js";
+
+const costOfMonthsModels = monthsShort.reduce((acc,cur) => {
+   acc[cur] = {
+       type: Number,
+       required: true,
+       default: 0,
+       validate: {
+           validator: function(value) {
+               if (this.tariff === tariffTypes.unLimit || this.tariff === tariffTypes.perMonth) {
+                   return !!(value);
+               }
+               return true;
+           },
+           message: `Cost of ${cur} is required.`
+       }
+   }
+   return acc
+},{})
 
 const tenantSchema = new mongoose.Schema({
     name: {
@@ -40,6 +58,21 @@ const tenantSchema = new mongoose.Schema({
         ...setRequiredProp('tariff'),
         enum: Object.values(tariffTypes),
     },
+    costOfTime: {
+        type: Number,
+        required: true,
+        default: 0,
+        validate: {
+            validator: function(value) {
+                if (this.tariff === tariffTypes.Guest || this.tariff === tariffTypes.perHour) {
+                    return !!(value);
+                }
+                return true;
+            },
+            message: `Cost of Hour is required.`
+        }
+    },
+    costOfMonth: costOfMonthsModels,
 },{
     toJSON: {virtuals: true},
     toObject: {virtuals: true}

@@ -16,6 +16,7 @@ import {carRouter} from "./src/routes/carRoutes.js";
 import {historyRouter} from "./src/routes/historyRoutes.js";
 import bodyParser from "body-parser";
 import {userRouter} from "./src/routes/userRoutes.js";
+import {liveStreamRouter} from "./src/routes/liveStreamRoutes.js";
 
 export const app = express()
 
@@ -64,6 +65,7 @@ app.use('/api/v1/users', userRouter)
 app.use('/api/v1/employees', employeeRouter)
 app.use('/api/v1/cars', carRouter)
 app.use('/api/v1/history', historyRouter)
+app.use('/api/v1/stream', liveStreamRouter)
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} in this server`, 404))

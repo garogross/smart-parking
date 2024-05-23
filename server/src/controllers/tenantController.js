@@ -17,6 +17,10 @@ export const createTenant = catchAsync(async (req, res, next) => {
         "bankName",
         "checkingAccount",
         "tariff",
+        "tariff",
+        "tariff",
+        "costOfTime",
+        "costOfMonth",
     ]
 
     const userProps = [

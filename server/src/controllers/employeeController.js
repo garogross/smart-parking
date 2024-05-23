@@ -1,10 +1,13 @@
-import {Employee} from "../models/employeeModel.js";
-import {HandlerFactory} from "./HandlerFactory.js";
-import {catchAsync} from "../utils/catchAsync.js";
-import {Car} from "../models/carModel.js";
-import {AppError} from "../utils/appError.js";
-import {Tenant} from "../models/tenantModel.js";
 import mongoose from "mongoose";
+import {HandlerFactory} from "./HandlerFactory.js";
+import {AppError} from "../utils/appError.js";
+import {catchAsync} from "../utils/catchAsync.js";
+
+import {Employee} from "../models/employeeModel.js";
+import {Car} from "../models/carModel.js";
+import {History} from "../models/historyModel.js";
+import {Tenant} from "../models/tenantModel.js";
+import {historyActionTypes} from "../constants.js";
 
 
 const handleFactory = new HandlerFactory(Employee, 'employee')
@@ -28,6 +31,38 @@ const checkAllowedCarsCount = async (tenantId, carsLength) => {
         throw new AppError(`your allowed car count is ${tenant.allowedCarCount}`, 400, {cars: '1'})
     }
 }
+
+export const getAllEmployeeMiddleware = handleFactory.getAll([
+        {
+            localField: "organization",
+            from: Tenant.collection.name
+        },
+        {
+            foreignField: "owner",
+            from: Car.collection.name,
+            as: 'cars'
+        },
+    ],
+    (req) => ({'organization._id': new mongoose.Types.ObjectId(req.params.id)}),
+    null,
+    true
+)
+
+export const setEmployeesReportDates = catchAsync(async (req, res, next) => {
+    const {dateFrom, dateTo} = req.query
+
+    const lastMonthStartDate = new Date()
+    lastMonthStartDate.setDate(1)
+
+    req.dates = {
+        from: dateFrom || lastMonthStartDate,
+        to: dateTo || new Date()
+    }
+    if (dateFrom) delete req.query.dateFrom
+    if (dateTo) delete req.query.dateTo
+    next()
+
+})
 
 export const createEmployee = (catchAsync(async (req, res, next) => {
     const {cars, ...employeeData} = req.body
@@ -113,7 +148,7 @@ export const updateEmployee = (catchAsync(async (req, res, next) => {
 
     next()
 }))
-export const deleteEmployee = catchAsync(async (req,res,next) => {
+export const deleteEmployee = catchAsync(async (req, res, next) => {
     const employee = await Employee.findByIdAndDelete(req.params.id)
 
     if (!employee) {
@@ -125,3 +160,37 @@ export const deleteEmployee = catchAsync(async (req,res,next) => {
 })
 
 export const getOneEmployee = handleFactory.getOne('cars organization')
+
+export const getEmployeesReport = catchAsync(async (req, res, next) => {
+    if (!req.data) return new AppError('no data')
+    const cars = req.data.flatMap(item => item.cars.map(car => car.plateNumber))
+    const history = await History.find({
+        date: {
+            "$gte": req.dates.from,
+            "$lte": req.dates.to,
+        },
+        plateNumber: {"$in": cars}
+    }).sort('date')
+    const resData = req.data.map(({fullName, cars}) => {
+        const curHistory = history
+            .filter(item => cars.map(car => car.plateNumber).includes(item.plateNumber))
+
+        let hoursInPark = 0
+        let entryDate = new Date(req.dates.from)
+
+        curHistory.forEach(item => {
+            if(item.type === historyActionTypes.entry) entryDate = new Date(item.date)
+            if(item.type === historyActionTypes.exit) {
+                hoursInPark +=  (new Date(item.date) - entryDate)/1000/60/60
+            }
+        })
+
+        return {
+            // fullName,
+            // cars,
+            hoursInPark
+        }
+    })
+
+    res.send({resData,cars,history})
+})

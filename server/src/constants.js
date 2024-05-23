@@ -45,3 +45,18 @@ export const downloadFileFormats = [
     'json',
     'xls',
 ]
+
+export const monthsShort = [
+    "jan",
+    "feb",
+    "mar",
+    "apr",
+    "may",
+    "jun",
+    "jul",
+    "aug",
+    "sep",
+    "oct",
+    "nov",
+    "dec"
+];

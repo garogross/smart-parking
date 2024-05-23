@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 import {app} from "./app.js";
 import mongoose from "mongoose";
 
+import {setTcpSocket} from "./src/utils/tcpSocket.js"
+
 dotenv.config({path: './config.env'})
 
 process.on('uncaughtException', (err) => {
@@ -17,6 +19,7 @@ mongoose.connect(db, {
     useUnifiedTopology: true,
 }).then((con) => {
     console.log('db connected')
+    // setTcpSocket()
 }).catch(err => console.log(err))
 
 const port = process.env.PORT || 5000

@@ -28,6 +28,7 @@ export const createHistoryFunc = async (data) => {
         console.log("createHistory Error",e)
     }
 }
+
 export const getAllHistory = handleFactory.getAll(
     [
         {
