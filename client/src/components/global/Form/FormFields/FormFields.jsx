@@ -23,16 +23,18 @@ function FormFields({
         .flatMap(item => item.cols)
         .flat()
         .reduce((acc, cur) => {
-            const value  = cur.type === 'date' ? formatDate(cur.value,true) : cur.value
+            const value = cur.type === 'date' ? formatDate(cur.value, true) : cur.value
             acc[cur.key] = value || ""
             return acc
         }, {})
 
-    const dynamicSections = sections.filter(item => item.sectionKey).reduce((acc, cur) => {
-        if (cur.values) acc[cur.sectionKey] = cur.values
-        else acc[cur.sectionKey] = []
-        return acc
-    }, {})
+    const dynamicSections = sections
+        .filter(item => item.sectionKey)
+        .reduce((acc, cur) => {
+            if (cur.values) acc[cur.sectionKey] = cur.values
+            else acc[cur.sectionKey] = []
+            return acc
+        }, {})
     const {
         formData,
         onChange,
@@ -43,7 +45,6 @@ function FormFields({
         e.preventDefault()
         onSubmit(formData)
     }
-
     const onChangeSelect = (key, value) => {
         setFormData(prevState => ({
             ...prevState,
@@ -57,7 +58,7 @@ function FormFields({
         const newItem = cols.flat().reduce((acc, cur) => {
             acc[cur.key] = ""
             return acc
-        },{})
+        }, {})
 
         setFormData(prevState => ({
             ...prevState,
@@ -79,10 +80,10 @@ function FormFields({
         return (
             <div
                 className={
-                `${styles["form__fields"]} `+
-                `${sectionKey ? styles["form__fields_dynamic"] : ""} `+
-                `${sectionKey && error?.[sectionKey] ? styles["form__fields_dynamicInvalid"] : ""} `
-            }>
+                    `${styles["form__fields"]} ` +
+                    `${sectionKey ? styles["form__fields_dynamic"] : ""} ` +
+                    `${sectionKey && error?.[sectionKey] ? styles["form__fields_dynamicInvalid"] : ""} `
+                }>
                 {
                     sectionKey ?
                         <button className={styles["form__crossBtn"]} onClick={onDeleteField}>
@@ -96,7 +97,9 @@ function FormFields({
                             className={styles["form__col"]}
                         >
                             {
-                                col.map(({
+                                col
+                                    .filter(item => !item.filter || item.filter(formData))
+                                    .map(({
                                              label,
                                              type,
                                              key,
@@ -126,7 +129,7 @@ function FormFields({
                                     const selectedValueProp = formData[key] && selectValues ?
                                         selectValues.find(item => item.value === formData[key])
                                         : null
-                                    const errorState = sectionKey && !error?.[key] === val  ? error?.[key] && !value : error?.[key]
+                                    const errorState = sectionKey && !error?.[key] === val ? error?.[key] && !value : error?.[key]
 
                                     return (
                                         <div
@@ -182,15 +185,15 @@ function FormFields({
                         <div className={styles["form__section"]} key={index}>
                             <h6 className={styles["form__sectionTitle"]}>{name}</h6>
                             {
-                                sectionKey ?
-                                    formData[sectionKey].map((item, index) => {
+                                sectionKey
+                                    ? formData[sectionKey].map((item, index) => {
                                         return (
                                             <Fragment key={index}>
                                                 {renderFields(cols, sectionKey, index)}
                                             </Fragment>
                                         )
-                                    }) :
-                                    renderFields(cols, sectionKey)
+                                    })
+                                    : renderFields(cols, sectionKey)
                             }
                             {
                                 sectionKey ?

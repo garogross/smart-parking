@@ -1,16 +1,7 @@
-import React, {useEffect} from 'react';
-import {useFormValue} from "../../../hooks/useFormValue";
-
-import MainBtn from "../../layout/MainBtn/MainBtn";
-import MainInput from "../../layout/MainInput/MainInput";
+import React from 'react';
 import LoadingPopup from "../../layout/LoadingPopup/LoadingPopup";
 import DataLoader from "../../layout/DataLoader/DataLoader";
 
-import styles from "./Form.module.scss"
-import Select from "../../layout/Select/Select";
-import Svg from "../../layout/Svg/Svg";
-import {crossIcon} from "../../../assets/svg";
-import SecondaryBtn from "../../layout/SecondaryBtn/SecondaryBtn";
 import FormFields from "./FormFields/FormFields";
 
 

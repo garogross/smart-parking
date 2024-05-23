@@ -53,6 +53,7 @@ function HistoryList() {
                 totalCount={totalCount}
                 page={curPage}
                 getData={getData}
+                defaultSort={'date-'}
             />
         </>
     );

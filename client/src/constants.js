@@ -8,7 +8,7 @@ export const userRoles = {
     moderator: "Модератор",
 }
 
-export const pageLimit = 5
+export const pageLimit = 10
 
 export const headerActionTypes = {
     showAll: "showAll",
@@ -58,4 +58,70 @@ export const downloadFileFormats = [
         key: 'xls',
         name: "Excel",
     },
+]
+
+export const monthsInRussian = [
+    {
+        name: "Январь",
+        key: "jan"
+    },
+    {
+        name: "Февраль",
+        key: "feb"
+    },
+    {
+        name: "Март",
+        key: "mar"
+    },
+    {
+        name: "Апрель",
+        key: "apr"
+    },
+    {
+        name: "Май",
+        key: "may"
+    },
+    {
+        name: "Июнь",
+        key: "jun"
+    },
+    {
+        name: "Июль",
+        key: "jul"
+    },
+    {
+        name: "Август",
+        key: "aug"
+    },
+    {
+        name: "Сентябрь",
+        key: "sep"
+    },
+    {
+        name: "Октябрь",
+        key: "oct"
+    },
+    {
+        name: "Ноябрь",
+        key: "nov"
+    },
+    {
+        name: "Декабрь",
+        key: "dec"
+    }
+];
+
+const costOfMonths = monthsInRussian.map((item) => (
+    {
+        label: item.name,
+        key: `costOfMonth.${item.key}`,
+        type: "number",
+        value: "0",
+        filter: ({tariff}) => tariff === tariffTypes.perMonth || tariff === tariffTypes.unLimit
+    }
+))
+
+export const costOfMonthSections = [
+    costOfMonths.slice(0,costOfMonths.length/2),
+    costOfMonths.slice(costOfMonths.length/2),
 ]

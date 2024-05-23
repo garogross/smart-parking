@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import Header from "../../global/Header/Header";
 import Form from "../../global/Form/Form";
 import {setSelectValues} from "../../../utils/functions/setSelectValues";
-import {tariffTypes} from "../../../constants";
+import {costOfMonthSections, tariffTypes} from "../../../constants";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router-dom";
 import {editUser, getOneUser, setEditUserError, setUsersPage} from "../../../redux/action/users";
@@ -10,6 +10,7 @@ import {tenantsPagePath, usersPagePath} from "../../../router/path";
 import {notPopupTexts} from "../../../utils/notPopupTexts";
 import {editTenant, getOneTenant, setTenantsPage} from "../../../redux/action/tenants";
 import {setEditFormSections} from "../../../utils/functions/setEditFormSections";
+import {formatTenantCost} from "../../../utils/functions/formatTenantCost";
 
 
 const sections = [
@@ -68,6 +69,24 @@ const sections = [
                     selectValues: setSelectValues(tariffTypes)
                 },
             ],
+            [
+                {
+                    label: 'Стоимость за час*',
+                    key: 'costOfTime',
+                    type: "number",
+                    filter: (formData) => formData.tariff === tariffTypes.perHour
+                },
+            ],
+            [
+                {
+                    label: 'Стоимость*',
+                    key: 'costOfTime',
+                    type: "number",
+                    value: "0",
+                    filter: (formData) => formData.tariff === tariffTypes.Guest
+                },
+            ],
+            ...costOfMonthSections
         ]
     },
 ]
@@ -83,14 +102,21 @@ function EditTenantForm() {
 
     const curItem = data.find(item => item._id === id)
 
+    if(curItem?.costOfMonth) {
+        for(let key in curItem.costOfMonth) {
+            curItem[`costOfMonth.${key}`] = curItem.costOfMonth[key]
+        }
+    }
+
     useEffect(() => {
         if (!curItem) dispatch(getOneTenant(id))
     }, []);
 
     const onSubmit = (formData) => {
+        const data = formatTenantCost(formData)
         const clb = () => navigate(tenantsPagePath,{state: {notPopupText: notPopupTexts.tenant.edit}})
         dispatch(setTenantsPage())
-        dispatch(editTenant(id,formData, clb))
+        dispatch(editTenant(id,data, clb))
     }
 
     return (

@@ -2,12 +2,15 @@ import React from 'react';
 import Header from "../../global/Header/Header";
 import Form from "../../global/Form/Form";
 import {setSelectValues} from "../../../utils/functions/setSelectValues";
-import {tariffTypes} from "../../../constants";
+import {tariffTypes, monthsInRussian, costOfMonthSections} from "../../../constants";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {addTenant, setAddTenantError, setTenantsPage} from "../../../redux/action/tenants";
 import {tenantsPagePath} from "../../../router/path";
 import {notPopupTexts} from "../../../utils/notPopupTexts";
+import {formatTenantCost} from "../../../utils/functions/formatTenantCost";
+
+
 
 const sections = [
     {
@@ -113,11 +116,29 @@ const sections = [
                     selectValues: setSelectValues(tariffTypes)
                 },
             ],
+            [
+                {
+                    label: 'Стоимость за час*',
+                    key: 'costOfTime',
+                    type: "number",
+                    filter: (formData) => formData.tariff === tariffTypes.perHour
+                },
+            ],
+            [
+                {
+                    label: 'Стоимость*',
+                    key: 'costOfTime',
+                    type: "number",
+                    value: "0",
+                    filter: (formData) => formData.tariff === tariffTypes.Guest
+                },
+            ],
+            ...costOfMonthSections
         ]
     },
 ]
 
-function AddTenantForm(props) {
+function AddTenantForm() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const loading = useSelector(state => state.tenants.addLoading)
@@ -125,9 +146,10 @@ function AddTenantForm(props) {
 
 
     const onSubmit = (formData) => {
+       const data = formatTenantCost(formData)
         const clb = () => navigate(tenantsPagePath,{state: {notPopupText: notPopupTexts.tenant.add}})
         dispatch(setTenantsPage())
-        dispatch(addTenant(formData, clb))
+        dispatch(addTenant(data, clb))
     }
 
     return (

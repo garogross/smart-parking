@@ -19,6 +19,7 @@ import CreateEmployeePage from "../pages/CreateEmployeePage/CreateEmployeePage";
 
 import {userRoles} from "../constants";
 import EmployeesPage from "../pages/EmployeesPage/EmployeesPage";
+import TenantReportPage from "../pages/TenantReportPage/TenantReportPage";
 
 export const mainPagePath = '/'
 export const loginPagePath = '/login'
@@ -39,7 +40,7 @@ export const tenantsPagePath = "/tenants"
 export const usersPagePath = "/users"
 
 
-const {tenant,admin,security,moderator} = userRoles
+const {tenant,admin,moderator} = userRoles
 
 export const routes = [
     {
@@ -179,7 +180,13 @@ export const routes = [
     },
     {
         path: reportPagePath,
-        component:  <PrivateRoute element={<ReportPage/>}/>
+        component:  <PrivateRoute element={<ReportPage/>} roles={[admin]}/>,
+        children: [
+            {
+                path: ":id",
+                component:  <PrivateRoute element={<TenantReportPage/>} roles={[admin]}/>
+            }
+        ]
     },
     // //
     {

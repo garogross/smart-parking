@@ -3,7 +3,7 @@ import {lsProps} from "../../utils/lsProps";
 import {isProduction} from "../../constants";
 
 export const baseUrl = '/api/v1';
-export const proxy = isProduction ? "https://infolog.uz" : "http://localhost:5000"
+export const proxy = "http://localhost:5000"
 
 export const baseConfig = {
     headers: {
@@ -49,6 +49,8 @@ export const getParkingUrl = '/parking/'
 export const getHistoryUrl = '/history/'
 export const downloadHistoryUrl = '/history/download/'
 
+// liveStream
+export const getLiveStreamUrl = '/stream'
 
 
 export const fetchRequest = async (fetchUrl, method = 'GET', body = null, config = authConfig()) => {

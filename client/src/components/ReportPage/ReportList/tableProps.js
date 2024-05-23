@@ -30,6 +30,6 @@ export const cols =  [
     },
     {
         key: "allowedCarCount",
-        renderActions: (item) => <ReportListFileBtn/>
+        renderActions: (item) => <ReportListFileBtn id={item._id}/>
     },
 ]

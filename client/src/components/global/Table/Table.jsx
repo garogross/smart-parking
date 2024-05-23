@@ -16,19 +16,20 @@ function Table({
                    totalCount,
                    page,
                    getData,
-                   setFilters
+                   setFilters,
+                   defaultSort
                }) {
-    const [sortBy, setSortBy] = useState("")
+    const [sortBy, setSortBy] = useState(defaultSort || "")
 
 
     const onChangeListPage = (page) => {
         scrollTop()
-        getData(null,page)
+        getData(null,page,sortBy)
     }
 
     const onFiltersChange = (filters) => {
         if(setFilters) setFilters(filters)
-        getData(filters,1)
+        getData(filters,1,sortBy)
     }
 
     const onSortChange = (sortBy,filters) => {

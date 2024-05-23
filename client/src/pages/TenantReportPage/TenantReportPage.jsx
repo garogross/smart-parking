@@ -1,15 +1,15 @@
 import React from 'react';
 import ReportList from "../../components/ReportPage/ReportList/ReportList";
 
-function ReportPage() {
+function TenantReportPage() {
 
     return (
         <div className={`gradientBg`}>
             <div className={'container topDistanceBlock'}>
-                <ReportList/>
+                TenantReportPage
             </div>
         </div>
     );
 }
 
-export default ReportPage;
+export default TenantReportPage;

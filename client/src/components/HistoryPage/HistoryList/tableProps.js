@@ -35,20 +35,20 @@ const adminAndModeratorProps = {
             filterBy: 'input',
         },
         {
-            name: "Номер Машини",
+            name: "Номер Авто",
             filterBy: 'input',
         },
         {
-            name: "Модель Авто.",
+            name: "Модель Авто",
             filterBy: 'input',
         },
         {
-            name: "Дата",
+            name: "Дата  ",
             filterBy: 'input',
             type: "date",
         },
         {
-            name: "#",
+            name: "Действие",
             filterBy: 'select',
             selectValues: setSelectValues(historyActionTypes)
         },
