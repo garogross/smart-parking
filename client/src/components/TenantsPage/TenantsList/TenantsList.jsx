@@ -8,10 +8,8 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {createTenantPagePath} from "../../../router/path";
 import {useDispatch, useSelector} from "react-redux";
 import {notPopupTexts} from "../../../utils/notPopupTexts";
-import {getUsers, setUsersPage} from "../../../redux/action/users";
 import {getTenants, setTenantsPage} from "../../../redux/action/tenants";
 import NotPopup from "../../layout/NotPopup/NotPopup";
-import UsersDeletePopup from "../../UsersPage/UsersList/UsersDeletePopup/UsersDeletePopup";
 import TenantsDeletePopup from "./TenantsDeletePopup/TenantsDeletePopup";
 
 

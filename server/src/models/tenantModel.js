@@ -12,7 +12,7 @@ const costOfMonthsModels = monthsShort.reduce((acc,cur) => {
        default: 0,
        validate: {
            validator: function(value) {
-               if (this.tariff === tariffTypes.unLimit || this.tariff === tariffTypes.perMonth) {
+               if (this.tariff === tariffTypes.manual) {
                    return !!(value);
                }
                return true;
@@ -31,7 +31,6 @@ const tenantSchema = new mongoose.Schema({
     },
     allowedCarCount: {
         type: Number,
-        ...setRequiredProp('allowed car count')
     },
     inSiteCarCount: {
         type: Number,
@@ -58,13 +57,13 @@ const tenantSchema = new mongoose.Schema({
         ...setRequiredProp('tariff'),
         enum: Object.values(tariffTypes),
     },
-    costOfTime: {
+    costOfHour: {
         type: Number,
         required: true,
         default: 0,
         validate: {
             validator: function(value) {
-                if (this.tariff === tariffTypes.Guest || this.tariff === tariffTypes.perHour) {
+                if (this.tariff === tariffTypes.guest) {
                     return !!(value);
                 }
                 return true;
@@ -73,6 +72,22 @@ const tenantSchema = new mongoose.Schema({
         }
     },
     costOfMonth: costOfMonthsModels,
+    validity: {
+        type: Date,
+        validate: {
+            validator: function(value) {
+                const today = new Date()
+                const valDate = new Date(value)
+                if (this.tariff === tariffTypes.guest) {
+                    return valDate > today && today.getDate() === valDate.getDate();
+                } else if (this.tariff === tariffTypes.manual) {
+                    return valDate > today;
+                }
+                return true;
+            },
+            message: `Invalid validity value.`
+        }
+    },
 },{
     toJSON: {virtuals: true},
     toObject: {virtuals: true}

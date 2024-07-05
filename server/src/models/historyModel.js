@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
-import {setRequiredProp} from "../utils/setRequiredProp.js";
-import {historyActionTypes} from "../constants.js";
-import {Parking} from "./parkingModel.js";
-import {Car} from "./carModel.js";
-import {Tenant} from "./tenantModel.js";
-import {Employee} from "./employeeModel.js";
+import { setRequiredProp } from "../utils/setRequiredProp.js";
+import {historyActionTypes, tariffTypes} from "../constants.js";
+import { Parking } from "./parkingModel.js";
+import { Car } from "./carModel.js";
+import { Tenant } from "./tenantModel.js";
+import { Employee } from "./employeeModel.js";
+import { cntrlBareerGate } from "../utils/cntrlBareerGate.js";
 
 const historySchema = new mongoose.Schema({
     car: {
@@ -24,44 +25,55 @@ const historySchema = new mongoose.Schema({
         ...setRequiredProp('car number'),
     },
 }, {
-    toJSON: {virtuals: true},
-    toObject: {virtuals: true}
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 })
 
 historySchema.pre('save', async function (next) {
+    // set date
     const now = Date.now()
     this.date = now
-    const { plateNumber, type} = this
-    const car = await Car.findOne({plateNumber}).populate({
+
+    const { plateNumber, type } = this
+
+    // set car by plateNumber
+    const car = await Car.findOne({ plateNumber }).populate({
         path: 'owner',
-        populate: {path: 'organization'} // Populate the cars of each employee
+        populate: { path: 'organization' } // Populate the cars of each employee
     })
     const carId = car?._id || null
-
-    console.log({plateNumber,car})
     this.car = carId
     const isEntry = type === historyActionTypes.entry
-    
+
+    // update parking
     if (isEntry) {
         const data = {
             car: carId || null,
             plateNumber,
             entryDate: now
         }
-        await Parking.create(data)
+
+        const parking = await Parking.findOne({ plateNumber })
+        if (!parking) await Parking.create(data)
 
     } else {
         await Parking.findOneAndDelete(plateNumber)
     }
+
     if (car) {
-        const {organization} = car.owner
+        // update Tenant (inSiteCarCount) and Employee (isInPark)
+        const { organization } = car.owner
         const sum = isEntry ? 1 : -1
         const inSiteCarCount = organization.inSiteCarCount
         if (inSiteCarCount || (!inSiteCarCount && sum === 1)) {
-            await Tenant.findByIdAndUpdate(organization._id, {inSiteCarCount: inSiteCarCount + sum})
+            await Tenant.findByIdAndUpdate(organization._id, { inSiteCarCount: inSiteCarCount + sum })
         }
         if (car.owner.isInPark !== isEntry) {
-            await Employee.findByIdAndUpdate(car.owner._id, {isInPark: isEntry})
+            await Employee.findByIdAndUpdate(car.owner._id, { isInPark: isEntry })
+        }
+
+        if(!isEntry && organization.tariff === tariffTypes.guest) {
+            car.remove()
         }
     }
 

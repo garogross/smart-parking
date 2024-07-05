@@ -2,14 +2,33 @@ import express from "express";
 import {protect, restrictTo} from "../controllers/authController.js";
 import {
     createEmployee,
-    deleteEmployee,
-    getAllEmployee, getAllEmployeeMiddleware, getEmployeesReport, getOneEmployee, setEmployeesReportDates,
+    deleteEmployee, downloadEmployeesReportProps,
+    getAllEmployee,
+    getAllEmployeeMiddleware,
+    getEmployeesReport,
+    getEmployeesReportMiddleware,
+    getOneEmployee,
+    setReportDates,
     updateEmployee
 } from "../controllers/employeeController.js";
 import {userRoles} from "../constants.js";
 import {setFullName} from "../controllers/userController.js";
+import {disablePagination} from "../controllers/historyController.js";
+import {downloadFile} from "../utils/fileTemplates/downloadFile.js";
+import {historyRouter} from "./historyRoutes.js";
 
 export const employeeRouter = express.Router()
+
+
+employeeRouter.get(
+    '/report/download/:id/:format',
+    disablePagination,
+    setReportDates,
+    getAllEmployeeMiddleware,
+    getEmployeesReportMiddleware,
+    downloadFile(...downloadEmployeesReportProps),
+)
+
 employeeRouter.use(protect)
 
 const {tenant,admin,moderator} = userRoles
@@ -35,7 +54,7 @@ employeeRouter.get('/getOne/:id', getOneEmployee)
 employeeRouter.get(
     '/report/:id',
     restrictTo(admin),
-    setEmployeesReportDates,
+    setReportDates,
     getAllEmployeeMiddleware,
     getEmployeesReport
 )

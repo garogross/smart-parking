@@ -1,12 +1,12 @@
 import React from 'react';
-import ReportList from "../../components/ReportPage/ReportList/ReportList";
+import TenantReportList from "../../components/TenantReportPage/TenantReportList/TenantReportList";
 
 function TenantReportPage() {
 
     return (
         <div className={`gradientBg`}>
             <div className={'container topDistanceBlock'}>
-                TenantReportPage
+                <TenantReportList/>
             </div>
         </div>
     );

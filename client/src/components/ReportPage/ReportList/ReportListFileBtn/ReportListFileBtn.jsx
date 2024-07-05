@@ -7,7 +7,9 @@ import {useNavigate} from "react-router-dom";
 import {reportPagePath} from "../../../../router/path";
 
 function ReportListFileBtn({id}) {
+
     const navigate = useNavigate()
+
     return (
         <TableBtn
             className={styles['reportListFileBtn']}

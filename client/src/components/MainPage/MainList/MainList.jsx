@@ -1,16 +1,21 @@
 import React from 'react';
+
+import { useDispatch, useSelector } from "react-redux";
+import { getTenants, resetTenant, setTenantsPage } from "../../../redux/action/tenants";
+import { getParking, openBareer, setParkingPage } from "../../../redux/action/parking";
+
+import MainListResetLoading from "./MainListResetLoading/MainListResetLoading";
+import VideoPlayer from '../VideoPlayer/VideoPlayer';
 import Header from "../../global/Header/Header";
 import Table from "../../global/Table/Table";
-import {userRoles} from "../../../constants";
-import {tableParams} from "./tableProps";
-import {useDispatch, useSelector} from "react-redux";
-import {getTenants, resetTenant, setTenantsPage} from "../../../redux/action/tenants";
-import {getParking, setParkingPage} from "../../../redux/action/parking";
-import LoadingPopup from "../../layout/LoadingPopup/LoadingPopup";
-import MainListResetLoading from "./MainListResetLoading/MainListResetLoading";
+import MainBtn from "../../layout/MainBtn/MainBtn"
 
+import {historyActionTypes, userRoles} from "../../../constants";
+import { tableParams } from "./tableProps";
 
-function MainList(props) {
+import styles from "./MainList.module.scss"
+
+function MainList() {
     const dispatch = useDispatch()
 
 
@@ -24,11 +29,11 @@ function MainList(props) {
     const getLoading = useSelector(state => state[curState].getLoading)
 
 
-    const getData = (filters, page,sortBy) => {
+    const getData = (filters, page, sortBy) => {
         const setPage = (page) => isAdmin ? setTenantsPage(page) : setParkingPage(page)
         if (page !== curPage) dispatch(setPage(page))
         const getId = role === userRoles.tenant ? user.organization : null
-        const getFunc = () => isAdmin ? getTenants({},sortBy) : getParking(getId,sortBy)
+        const getFunc = () => isAdmin ? getTenants({}, sortBy) : getParking(getId, sortBy)
         dispatch(getFunc(filters))
     }
 
@@ -36,7 +41,8 @@ function MainList(props) {
         dispatch(resetTenant(id))
     }
 
-    const {cols,setCols,flexCols,titles} = tableParams?.[role]
+    const { cols, setCols, flexCols, titles } = tableParams?.[role]
+    // const src = `/api/stream/${isExit ? "exit" : "entry"}/index.m3u8`
 
     return (
         <>
@@ -45,6 +51,21 @@ function MainList(props) {
                 totalCount={totalCount}
                 page={curPage}
             />
+            {
+                (user.role === userRoles.admin || user.role === userRoles.security) &&
+                <div className={styles['mainList__cameraControl']}>
+                    <div>
+                        <VideoPlayer/>
+                        <MainBtn onClick={() => openBareer(historyActionTypes.entry)}>Открыть шлагбаум</MainBtn>
+                    </div>
+                    <div>
+                        <VideoPlayer isExit={true}/>
+                        <MainBtn onClick={() => openBareer(historyActionTypes.exit)}>Открыть шлагбаум</MainBtn>
+                    </div>
+
+                </div>
+            }
+
             <Table
                 titles={titles}
                 cols={setCols ? setCols(onResetTenant) : cols}
@@ -55,7 +76,7 @@ function MainList(props) {
                 page={curPage}
                 getData={getData}
             />
-            {isAdmin ? <MainListResetLoading/> : null}
+            {isAdmin ? <MainListResetLoading /> : null}
         </>
     );
 }

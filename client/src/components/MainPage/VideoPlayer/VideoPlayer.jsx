@@ -1,34 +1,29 @@
-// src/components/VideoPlayer.jsx
-import React, { useEffect, useRef } from 'react';
-import videojs from 'video.js';
-import 'video.js/dist/video-js.css';
-import {baseUrl, getLiveStreamUrl, proxy} from "../../../redux/action/fetchTools";
+import React, { useState } from 'react';
+import ReactHlsPlayer from 'react-hls-player';
 
-const VideoPlayer = () => {
-    const videoRef = useRef(null);
+import styles from "./VideoPlayer.module.scss"
 
-    useEffect(() => {
-        const player = videojs(videoRef.current, {
-            controls: true,
-            autoplay: true,
-            sources: [{
-                src: `${proxy}${baseUrl}${getLiveStreamUrl}`,
-                type: 'video/mp4'
-            }]
-        });
+const VideoPlayer = ({isExit}) => {
+  const [isZoomed, setIsZoomed] = useState(false)
+  const src = `/api/stream/${isExit ? "exit" : "entry"}/index.m3u8`
 
-        return () => {
-            if (player) {
-                player.dispose();
-            }
-        };
-    }, []);
+  const toggleIsZoomed = () => setIsZoomed(prevState => !prevState)
 
-    return (
-        <div>
-            <video ref={videoRef} className="video-js vjs-default-skin" width="600" height="300" />
-        </div>
-    );
+  return (
+    <div
+      className={`${styles['videoPlayer']} ${isZoomed ? styles['videoPlayer_active'] : ""}`}
+      onClick={toggleIsZoomed}
+    >
+      <ReactHlsPlayer
+        muted={true}
+        src={src}
+        autoPlay={true}
+        width="100%"
+        height="auto"
+        className={`${styles['videoPlayer__video']} ${isZoomed ? styles['videoPlayer__video_active'] : ""}`}
+      />
+    </div>
+  );
 };
 
 export default VideoPlayer;

@@ -12,8 +12,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
+    "digest-fetch": "^3.1.1",
     "dotenv": "^16.3.1",
     "exceljs": "^4.4.0",
     "express": "^4.18.2",
@@ -28,6 +30,8 @@
     "mongoose": "^7.4.3",
     "multer": "^1.4.5-lts.1",
     "net": "^1.0.2",
+    "ngrok": "^5.0.0-beta.2",
+    "node-rtsp-stream": "^0.0.9",
     "validator": "^13.11.0"
   },
   "devDependencies": {

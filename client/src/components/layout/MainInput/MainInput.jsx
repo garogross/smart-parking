@@ -10,7 +10,7 @@ const MainInput = memo(({
                             ...properties
                         }) => {
     const InputElement = isTextArea ? 'textarea' : 'input';
-
+    console.log({isInvalid,value});
 
     return (
         <InputElement

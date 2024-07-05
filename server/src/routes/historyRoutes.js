@@ -1,24 +1,33 @@
 import express from "express";
-import {protect} from "../controllers/authController.js";
+import {protect, restrictTo} from "../controllers/authController.js";
 import {
     createHistory,
-    disableHistoryPagination, downloadHistoryProps,
+     disablePagination, downloadHistoryProps,
     getAllHistory,
-    getAllHistoryMiddleware,
+    getAllHistoryMiddleware, getHistoryOfEmployee,
 } from "../controllers/historyController.js";
 import {downloadFile} from "../utils/fileTemplates/downloadFile.js";
+import {setReportDates} from "../controllers/employeeController.js";
+import {userRoles} from "../constants.js";
 
 export const historyRouter = express.Router()
 
 historyRouter.post('/create', createHistory)
 historyRouter.get(
     '/download/:format',
-    disableHistoryPagination,
+    disablePagination,
     getAllHistoryMiddleware,
     downloadFile(...downloadHistoryProps),
 )
 
+
 historyRouter.use(protect)
 historyRouter.get('/', getAllHistory)
 historyRouter.get('/:id', getAllHistory)
+historyRouter.get(
+    '/report/:id',
+    restrictTo(userRoles.admin),
+    setReportDates,
+    getHistoryOfEmployee
+)
 

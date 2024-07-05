@@ -99,7 +99,7 @@ function CreateEmployeeForm() {
         <>
             <Header
                 showBackBtn={true}
-                title={'> Создать Сотрудник'}
+                title={'> Добавить сотрудника'}
             />
             <Form
                 error={error}

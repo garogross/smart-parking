@@ -43,7 +43,7 @@ const adminAndModeratorProps = {
             filterBy: 'input',
         },
         {
-            name: "Дата  ",
+            name: "Дата",
             filterBy: 'input',
             type: "date",
         },
@@ -82,7 +82,7 @@ const adminAndModeratorProps = {
         {
             key: "type",
             render: (item) => {
-                const className = item.type === historyActionTypes.exit ? 'blueText' : 'greenText'
+                const className = item.type === historyActionTypes.exit ? 'redText' : 'greenText'
                 return (
                     <span className={className}>{item.type}</span>
                 )

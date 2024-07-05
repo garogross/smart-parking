@@ -1,0 +1,33 @@
+@import "../../../styles/vars";
+@import "../../../styles/mixins";
+
+
+.tenantReportDatesModal {
+
+  &__list {
+    @include flexCol(flex-start);
+    flex-direction: column;
+    gap: 10px;
+    max-height: calc(100vh - 180px);
+    overflow: auto;
+  }
+
+  &__listItem {
+    width: 100%;
+    @include flexCol()
+  }
+
+  &__listTxt {
+    flex: 1;
+    @include setFont(16px, 400);
+
+    &_red {
+      color: $color-red;
+    }
+
+    &_green {
+      color: $color-green,
+    }
+  }
+
+}

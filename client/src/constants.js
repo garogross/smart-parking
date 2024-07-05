@@ -29,11 +29,11 @@ export const historyActionTypes = {
 }
 
 export const tariffTypes = {
-    unLimit: "Безлимитный",
-    perMonth: "Тариф с оплатой за месяц ",
-    perHour: "Почасовой Тариф",
-    Guest: "Гостевой тариф",
+    manual: "Ограничение вручную",
+    admin: "Админский Тарифф",
+    guest: "Гостевой тарифф",
 }
+
 
 export const fullNameChain = '**'
 
@@ -117,7 +117,7 @@ const costOfMonths = monthsInRussian.map((item) => (
         key: `costOfMonth.${item.key}`,
         type: "number",
         value: "0",
-        filter: ({tariff}) => tariff === tariffTypes.perMonth || tariff === tariffTypes.unLimit
+        filter: ({tariff}) => tariff === tariffTypes.manual || tariff === tariffTypes.admin
     }
 ))
 

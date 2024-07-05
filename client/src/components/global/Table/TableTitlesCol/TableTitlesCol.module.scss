@@ -51,6 +51,8 @@
   &__itemText {
     @include setFont(16px, 600, $color-polo-blue);
     text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__filterInput {

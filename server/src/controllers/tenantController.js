@@ -19,8 +19,9 @@ export const createTenant = catchAsync(async (req, res, next) => {
         "tariff",
         "tariff",
         "tariff",
-        "costOfTime",
+        "costOfHour",
         "costOfMonth",
+        "validity",
     ]
 
     const userProps = [
@@ -54,6 +55,7 @@ export const createTenant = catchAsync(async (req, res, next) => {
    next()
 })
 export const getAllTenant = handleFactory.getAll()
+export const getAllTenantMiddleware = handleFactory.getAll(null,null,null,true)
 
 export const getNameList = catchAsync(async (req,res,next) => {
     const data = await Tenant.find().select('name')
@@ -67,3 +69,46 @@ export const updateTenant = handleFactory.updateOne(true)
 export const deleteTenant = handleFactory.deleteOne(true)
 
 export const getOneTenant = handleFactory.getOne()
+
+
+const reportFileTitles = [
+    {
+        width: '40',
+        text: "Наименование"
+    },
+    {
+        width: '30',
+        text: "Тариф"
+    },
+    {
+        width: '30',
+        text: "Количество выделяемых машиномест"
+    },
+]
+const reportFileCols = [
+    {
+        width: '40',
+        key: "name",
+    },
+    {
+        width: '30',
+        key: "tariff"
+    },
+    {
+        width: '30',
+        key: "allowedCarCount"
+    },
+]
+
+const renderReportFileData = ({name,tariff,allowedCarCount}) => ({
+    name,
+    tariff,
+    allowedCarCount,
+})
+
+export const downloadReportProps = [
+    reportFileTitles,
+    reportFileCols,
+    renderReportFileData,
+    'report'
+]

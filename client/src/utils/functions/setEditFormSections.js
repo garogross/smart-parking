@@ -6,13 +6,16 @@ const fullNameFields = [
     "lastName",
     "patronymic",
 ]
+
 export const setEditFormSections = (sections, curItem) => {
     return sections.map(section => {
         const result = {
             ...section,
             cols: section.cols.map(col => (
                 col.map(field => {
-                    let value = curItem?.[field.key] || ""
+                    const [fieldKey,fieldchildKey] = field.key.split(".")
+                    const valueChecked =  fieldchildKey ? curItem?.[fieldKey]?.[fieldchildKey] : curItem?.[fieldKey]
+                    let value = valueChecked || ""
                     fullNameFields.forEach((item, index) => {
                         if (field.key === item && curItem) value = curItem.fullName.split(fullNameChain)[index]
                     })

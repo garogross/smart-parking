@@ -15,7 +15,6 @@ import {
 } from "../types";
 import {
     addEmployeesUrl,
-    addTenantsUrl,
     fetchRequest,
     getEmployeesUrl, getOneEmployeeUrl,
     setFormError,

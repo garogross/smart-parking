@@ -3,6 +3,7 @@ import {protect, restrictTo} from "../controllers/authController.js";
 import {
     deleteParking,
     getAllParking, getParkingMiddleware,
+    openBareer,
 } from "../controllers/parkingController.js";
 import {userRoles} from "../constants.js";
 
@@ -11,7 +12,11 @@ parkingRouter.use(protect)
 
 
 parkingRouter.get('/', getAllParking)
+
+parkingRouter.get('/openBareer/:type', openBareer)
+
 parkingRouter.get('/:id', getAllParking)
+
 
 parkingRouter.delete(
     '/:id',

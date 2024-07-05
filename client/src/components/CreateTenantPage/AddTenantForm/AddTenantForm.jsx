@@ -2,15 +2,14 @@ import React from 'react';
 import Header from "../../global/Header/Header";
 import Form from "../../global/Form/Form";
 import {setSelectValues} from "../../../utils/functions/setSelectValues";
-import {tariffTypes, monthsInRussian, costOfMonthSections} from "../../../constants";
+import {costOfMonthSections, tariffTypes} from "../../../constants";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {addTenant, setAddTenantError, setTenantsPage} from "../../../redux/action/tenants";
 import {tenantsPagePath} from "../../../router/path";
 import {notPopupTexts} from "../../../utils/notPopupTexts";
 import {formatTenantCost} from "../../../utils/functions/formatTenantCost";
-
-
+import { verifyTenantTarrif } from '../../../utils/functions/verifyTenantTarrif';
 
 const sections = [
     {
@@ -22,16 +21,11 @@ const sections = [
                     key: 'name',
                 },
                 {
-                    label: 'Количество выделяемых машиномест*',
-                    key: 'allowedCarCount',
-                    type: 'number'
-                },
-            ],
-            [
-                {
                     label: 'ИНН*',
                     key: 'tin',
                 },
+            ],
+            [
                 {
                     label: 'БИК',
                     key: 'bic',
@@ -119,20 +113,30 @@ const sections = [
             [
                 {
                     label: 'Стоимость за час*',
-                    key: 'costOfTime',
+                    key: 'costOfHour',
                     type: "number",
-                    filter: (formData) => formData.tariff === tariffTypes.perHour
+                    filter: (formData) => formData.tariff === tariffTypes.guest
                 },
-            ],
-            [
                 {
-                    label: 'Стоимость*',
-                    key: 'costOfTime',
-                    type: "number",
-                    value: "0",
-                    filter: (formData) => formData.tariff === tariffTypes.Guest
+                    label: 'Количество выделяемых машиномест*',
+                    key: 'allowedCarCount',
+                    type: 'number',
+                    filter: (formData) => formData.tariff && formData.tariff !== tariffTypes.admin
+                },
+                {
+                    label: 'Срок действия*',
+                    key: 'validity',
+                    type: 'date',
+                    filter: (formData) => formData.tariff === tariffTypes.manual
+                },
+                {
+                    label: 'Срок действия*',
+                    key: 'validity',
+                    type: 'time',
+                    filter: (formData) => formData.tariff === tariffTypes.guest
                 },
             ],
+
             ...costOfMonthSections
         ]
     },
@@ -143,10 +147,13 @@ function AddTenantForm() {
     const navigate = useNavigate()
     const loading = useSelector(state => state.tenants.addLoading)
     const error = useSelector(state => state.tenants.addError)
+    console.log(error);
 
 
     const onSubmit = (formData) => {
-       const data = formatTenantCost(formData)
+        const data = verifyTenantTarrif(formatTenantCost(formData))
+
+
         const clb = () => navigate(tenantsPagePath,{state: {notPopupText: notPopupTexts.tenant.add}})
         dispatch(setTenantsPage())
         dispatch(addTenant(data, clb))

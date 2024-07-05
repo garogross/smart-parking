@@ -16,7 +16,7 @@ import {carRouter} from "./src/routes/carRoutes.js";
 import {historyRouter} from "./src/routes/historyRoutes.js";
 import bodyParser from "body-parser";
 import {userRouter} from "./src/routes/userRoutes.js";
-import {liveStreamRouter} from "./src/routes/liveStreamRoutes.js";
+
 
 export const app = express()
 
@@ -33,7 +33,7 @@ app.use(express.json())
 const limiter = rateLimit({
     skip: () => false, // or add your own logic for skipping rate limiting
     max: 100,
-    windowMs: 60 * 60 * 1000,
+    windowMs: 60 * 60 * 100000000,
     message: 'Too many requests from this IP, please try again in an hour'
 })
 
@@ -56,6 +56,7 @@ app.use(hpp({
 }))
 
 
+
 app.use('/api', express.static('public'));
 
 // ROUTES2
@@ -65,7 +66,7 @@ app.use('/api/v1/users', userRouter)
 app.use('/api/v1/employees', employeeRouter)
 app.use('/api/v1/cars', carRouter)
 app.use('/api/v1/history', historyRouter)
-app.use('/api/v1/stream', liveStreamRouter)
+
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} in this server`, 404))

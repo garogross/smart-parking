@@ -40,7 +40,7 @@ export const tenantsPagePath = "/tenants"
 export const usersPagePath = "/users"
 
 
-const {tenant,admin,moderator} = userRoles
+const {tenant,admin,security,moderator} = userRoles
 
 export const routes = [
     {
@@ -180,7 +180,7 @@ export const routes = [
     },
     {
         path: reportPagePath,
-        component:  <PrivateRoute element={<ReportPage/>} roles={[admin]}/>,
+        component:  <PrivateRoute element={<ReportPage/>}/>,
         children: [
             {
                 path: ":id",

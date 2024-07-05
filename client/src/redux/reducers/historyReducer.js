@@ -1,4 +1,6 @@
 import {
+    GET_EMPLOYEE_HISTORY_ERROR,
+    GET_EMPLOYEE_HISTORY_LOADING_START, GET_EMPLOYEE_HISTORY_SUCCESS,
     GET_HISTORY_ERROR,
     GET_HISTORY_LOADING_START,
     GET_HISTORY_SUCCESS,
@@ -10,8 +12,14 @@ const initialState = {
     data: [],
     getLoading: false,
     getError: null,
+
+    employeeHistory: null,
+    getEmployeeHistoryLoading: false,
+    getEmployeeHistoryError: null,
+
     downloadLoading: false,
     downloadError: null,
+
     totalCount: 0,
     page: 1,
 }
@@ -40,6 +48,28 @@ export const historyReducer = (state = initialState, action) => {
                 ...state,
                 getError: payload,
                 getLoading: false
+            }
+        }
+
+        case GET_EMPLOYEE_HISTORY_SUCCESS: {
+            return {
+                ...state,
+                employeeHistory: payload,
+                getEmployeeHistoryLoading: false,
+            }
+        }
+        case GET_EMPLOYEE_HISTORY_LOADING_START: {
+            return {
+                ...state,
+                getEmployeeHistoryLoading: true,
+                getEmployeeHistoryError: null,
+            }
+        }
+        case GET_EMPLOYEE_HISTORY_ERROR: {
+            return {
+                ...state,
+                getEmployeeHistoryError: payload,
+                getEmployeeHistoryLoading: false
             }
         }
 

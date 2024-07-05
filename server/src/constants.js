@@ -13,10 +13,9 @@ export const userRoles = {
 }
 
 export const tariffTypes = {
-    unLimit: "Безлимитный",
-    perMonth: "Тариф с оплатой за месяц ",
-    perHour: "Почасовой Тариф",
-    Guest: "Гостевой тариф",
+    manual: "Ограничение вручную",
+    admin: "Админский Тарифф",
+    guest: "Гостевой тарифф",
 }
 
 export const historyActionTypes = {

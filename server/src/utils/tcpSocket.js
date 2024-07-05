@@ -7,35 +7,47 @@ export const setTcpSocket = () => {
     console.log('Client connected');
   
     socket.on('data', (data) => {
-      const buffer = Buffer.from(data,'utf8')
+      console.log("socket data",data);
+      const buffer = Buffer.from(data,'hex')
       const xml = buffer.toString('utf8');
-  
-      console.log('xmlString',xml)
+  console.log({xml});
       const plateStartTag = '<licensePlate>'
       const plateEndTag = '</licensePlate>'
       const plateStartIndex = xml.indexOf(plateStartTag)
       const plateEndIndex = xml.indexOf(plateEndTag)
-  
-      if(plateStartIndex === -1) return;
-  
-      console.log('licensePlate',xml.slice(plateStartIndex + plateStartTag.length,plateEndIndex));
-      const resdata = {
-        plateNumber: xml.slice(plateStartIndex + plateStartTag.length,plateEndIndex),
-        type: historyActionTypes.entry
-      }
-      createHistoryFunc(resdata)
-  
+      
+      const ipAddressStartTag = '<ipAddress>'
+      const ipAddressEndTag = '</ipAddress>'
+      const ipAddressStartIndex = xml.indexOf(ipAddressStartTag)
+      const ipAddressEndIndex = xml.indexOf(ipAddressEndTag)
+      console.log({plateStartIndex})
+
+      if(plateStartIndex === -1) return; 
+        const ipAddress = xml.slice(ipAddressStartIndex + ipAddressStartTag.length,ipAddressEndIndex)
+        console.log({ipAddress});
+        const cameraTypes = {
+          [process.env.ENTRY_CAMERA_IP]: historyActionTypes.entry,
+          [process.env.EXIT_CAMERA_IP]: historyActionTypes.exit,
+        }
+        const resdata = {
+          plateNumber: xml.slice(plateStartIndex + plateStartTag.length,plateEndIndex),
+          type: cameraTypes[ipAddress]
+        }
+        createHistoryFunc(resdata,true)
     });
   
     // Handle client disconnection
     socket.on('end', () => {
       console.log('Client disconnected');
     });
+
+    socket.on('error', (error) => {
+      console.log('error',error);
+    });
   });
   
   const PORT = 8090;
   const HOST = '192.168.1.41'
-  console.log("setTcpSocket",server)
   server.listen(PORT, HOST, () => {
     console.log(`Server listening on ${HOST}:${PORT}`);
   });

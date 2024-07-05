@@ -6,9 +6,11 @@ import {Employee} from "../models/employeeModel.js";
 import {Tenant} from "../models/tenantModel.js";
 
 import {catchAsync} from "../utils/catchAsync.js";
-import { historyActionTypes, historyStatusTypes} from "../constants.js";
+import {historyActionTypes, historyStatusTypes} from "../constants.js";
 import {formatDate} from "../utils/date.js";
 import {formatFullName} from "../utils/formatFullName.js";
+import {setPlateNumber} from "../state.js";
+import {cntrlBareerGate} from "../utils/cntrlBareerGate.js";
 
 
 const handleFactory = new HandlerFactory(History, 'history')
@@ -19,13 +21,48 @@ const filterByOrganization = (req) => (
         : {}
 )
 
-export const createHistory = handleFactory.create()
+// export const createHistory = handleFactory.create()
 
-export const createHistoryFunc = async (data) => {
+export const createHistory = catchAsync(async (req,res,next) => {
+    console.log("createHistory");
+    await createHistoryFunc(req.body,true)
+    res.send({status: "success"})
+})
+
+export const createHistoryFunc = async (data, verify) => {
     try {
+        console.log("createHistoryFunc",{data});
+        const isExit = data.type === historyActionTypes.exit
+        setPlateNumber(data.plateNumber,isExit)
+        if (verify && data.type === historyActionTypes.entry) {
+            const car = await Car
+                .findOne({plateNumber: data.plateNumber})
+                .populate({
+                    path: 'owner',
+                    populate: {path: 'organization'} // Populate the cars of each employee
+                })
+            if (!car) return;
+
+            const {organization} = car.owner
+
+            if(new Date(organization.validate) < new Date()) {
+                console.log(`validate of ${organization.name} has expired`)
+                return;
+            }
+
+            if(organization.inSiteCarCount >= organization.allowedCarCount) {
+                console.log(`allowed car count of ${organization.name} has filled`)
+                return;
+            }
+
+        }
+    
+        // await cntrlBareerGate(isExit)
+        if (!data.plateNumber) return;
+        console.log("History.create");
         await History.create(data)
     } catch (e) {
-        console.log("createHistory Error",e)
+        console.log("createHistory Error", e)
     }
 }
 
@@ -67,7 +104,27 @@ export const getAllHistoryMiddleware = handleFactory.getAll(
     true
 )
 
-export const disableHistoryPagination = catchAsync(async (req, res, next) => {
+export const getHistoryOfEmployee = handleFactory.getAll(
+    [
+        {
+            localField: "car",
+            from: Car.collection.name
+        },
+        {
+            localField: "car.owner",
+            from: Employee.collection.name
+        },
+    ],
+    (req) => ({
+        [`car.owner._id`]: new mongoose.Types.ObjectId(req.params.id),
+        date: {
+            "$gte": req.dates.from,
+            "$lte": req.dates.to,
+        },
+    })
+)
+
+export const disablePagination = catchAsync(async (req, res, next) => {
     req.query.page = 0
     next()
 })
@@ -156,3 +213,6 @@ export const downloadHistoryProps = [
     renderHistoryFileData,
     'history'
 ]
+
+
+

@@ -4,15 +4,19 @@ import {
     ADD_TENANT_SUCCESS,
     DELETE_TENANT_ERROR,
     DELETE_TENANT_LOADING_START,
-    DELETE_TENANT_SUCCESS, EDIT_TENANT_ERROR, EDIT_TENANT_LOADING_START, EDIT_TENANT_SUCCESS, EDIT_USER_ERROR,
-    EDIT_USER_LOADING_START,
-    EDIT_USER_SUCCESS,
+    DELETE_TENANT_SUCCESS,
+    EDIT_TENANT_ERROR,
+    EDIT_TENANT_LOADING_START,
+    EDIT_TENANT_SUCCESS,
     GET_TENANT_NAME_LIST_ERROR,
     GET_TENANT_NAME_LIST_LOADING_START,
-    GET_TENANT_NAME_LIST_SUCCESS,
+    GET_TENANT_NAME_LIST_SUCCESS, GET_TENANT_REPORT_ERROR, GET_TENANT_REPORT_LOADING_START, GET_TENANT_REPORT_SUCCESS,
     GET_TENANTS_ERROR,
     GET_TENANTS_LOADING_START,
-    GET_TENANTS_SUCCESS, RESET_TENANT_ERROR, RESET_TENANT_LOADING_START, RESET_TENANT_SUCCESS,
+    GET_TENANTS_SUCCESS,
+    RESET_TENANT_ERROR,
+    RESET_TENANT_LOADING_START,
+    RESET_TENANT_SUCCESS,
     SET_TENANTS_PAGE,
 } from "../types";
 
@@ -21,15 +25,24 @@ const initialState = {
     data: [],
     getLoading: false,
     getError: null,
+
     addLoading: false,
     addError: null,
+
     deleteLoading: false,
     deleteError: null,
+
     resetLoading: false,
     resetError: null,
+
     nameList: [],
     getNameListLoading: false,
     getNameListError: null,
+
+    report: [],
+    getReportLoading: false,
+    getReportError: null,
+
     totalCount: 0,
     page: 1,
 }
@@ -168,6 +181,27 @@ export const tenantsReducer = (state = initialState, action) => {
                 ...state,
                 getNameListError: payload,
                 getNameListLoading: false
+            }
+        }
+        case GET_TENANT_REPORT_SUCCESS: {
+            return {
+                ...state,
+                report: payload,
+                getReportLoading: false
+            }
+        }
+        case GET_TENANT_REPORT_LOADING_START: {
+            return {
+                ...state,
+                getReportLoading: true,
+                getReportError: null,
+            }
+        }
+        case GET_TENANT_REPORT_ERROR: {
+            return {
+                ...state,
+                getReportError: payload,
+                getReportLoading: false
             }
         }
 

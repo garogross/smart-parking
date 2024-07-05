@@ -17,9 +17,11 @@ const IconBtn = ({icon, className, ...properties}) => (
     </button>
 )
 
-const DownloadBtn = ({downloadUrl,fileName, ...properties}) => {
-    const [isPopupOpened,setIsPopupOpened] = useState(false)
+const DownloadBtn = ({downloadUrl, fileName, ...properties}) => {
+    const [isPopupOpened, setIsPopupOpened] = useState(false)
     const popupRef = useRef(null)
+
+    const [downloadUrlBase, downloadUrlQuery] = downloadUrl.split("?")
 
     useEffect(() => {
         onClickOutSide([popupRef], closePopup, isPopupOpened)
@@ -39,7 +41,7 @@ const DownloadBtn = ({downloadUrl,fileName, ...properties}) => {
                     {
                         downloadFileFormats.map((item, index) => (
                             <a
-                                href={proxy+baseUrl+downloadUrl+item.key}
+                                href={proxy + baseUrl + downloadUrlBase + item.key + (downloadUrlQuery || "")}
                                 download={`${fileName}.${item.key}`}
                                 className={styles['headerActions__downloadLink']}
                                 key={index}
