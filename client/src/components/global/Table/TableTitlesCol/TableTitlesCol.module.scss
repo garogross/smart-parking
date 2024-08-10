@@ -27,8 +27,10 @@
     flex-direction: column;
     gap: 4px;
     justify-content: space-between;
-    overflow: clip;
-    overflow-clip-margin: 500px;
+  
+    &_hidden {
+      overflow: hidden;
+    }
   }
 
   &__itemBtn {

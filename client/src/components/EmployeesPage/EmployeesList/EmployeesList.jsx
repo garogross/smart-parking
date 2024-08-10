@@ -1,17 +1,18 @@
 import React, {useEffect, useState} from 'react';
+import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {getEmployees, setEmployeesPage} from "../../../redux/action/employees";
+
 import Header from "../../global/Header/Header";
 import Table from "../../global/Table/Table";
 import HeaderActions from "../../global/HeaderActions/HeaderActions";
-import {headerActionTypes, userRoles} from "../../../constants";
-import {flexCols, titles, setCols} from "./tableProps";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
-import {createEmployeePagePath, createTenantPagePath} from "../../../router/path";
-import {useDispatch, useSelector} from "react-redux";
-import {notPopupTexts} from "../../../utils/notPopupTexts";
-import {getEmployees, setEmployeesPage} from "../../../redux/action/employees";
-import TenantsDeletePopup from "../../TenantsPage/TenantsList/TenantsDeletePopup/TenantsDeletePopup";
 import NotPopup from "../../layout/NotPopup/NotPopup";
 import EmployeesDeletePopup from "./EmployeesDeletePopup/EmployeesDeletePopup";
+
+import {notPopupTexts} from "../../../utils/notPopupTexts";
+import {createEmployeePagePath} from "../../../router/path";
+import {headerActionTypes, userRoles} from "../../../constants";
+import {flexCols, titles, setCols} from "./tableProps";
 
 
 

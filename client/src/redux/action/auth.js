@@ -1,23 +1,19 @@
 import {
-    EDIT_USER_ERROR,
-    EDIT_USER_LOADING_START, EDIT_USER_SUCCESS,
     LOGIN_ERROR,
     LOGIN_LOADING_START,
     LOGIN_SUCCESS,
     LOGOUT_USER,
-    RESET_USER_STATE, UPDATE_PASSWORD_ERROR,
-    UPDATE_PASSWORD_LOADING_START,
-    UPDATE_PASSWORD_SUCCESS, UPDATE_PROFILE_ERROR, UPDATE_PROFILE_LOADING_START, UPDATE_PROFILE_SUCCESS,
+    RESET_USER_STATE,
+    UPDATE_PROFILE_ERROR, UPDATE_PROFILE_LOADING_START, UPDATE_PROFILE_SUCCESS,
 } from "../types";
 import {
     baseConfig,
-    fetchRequest, getUsersUrl, setFormError,
+    fetchRequest,  setFormError,
     siginUrl, updateProfileUrl,
 } from "./fetchTools";
 import {getLSItem, removeLSItem, setLSItem} from "../../utils/functions/localStorage";
 import {lsProps} from "../../utils/lsProps";
 import {userRoles} from "../../constants";
-import {setEditUserError} from "./users";
 
 export const login = (formData, clb) => async (dispatch) => {
     dispatch({type: LOGIN_LOADING_START})

@@ -51,27 +51,36 @@ export const signUp = catchAsync(async (req, res, next) => {
 
 export const login = catchAsync(async (req, res, next) => {
     const {username, password} = req.body
-
+    console.log("req.body",req.body)
     if (!username || !password) {
         return next(new AppError('Пожалуйста, укажите username или пароль', 400, {username: {}}))
     }
 
-    const user = await User.findOne({
+    const users = await User.find({
         username: {
             $regex: new RegExp(`^${username}$`, 'i')
         }
     }).select('+password')
-
-    if (!user) {
+    console.log({users})
+    if (!users.length) {
         return next(new AppError('Неверный username', 401, {username: {}}))
     }
-    const isPasswordCorrect = await user.correctPassword(password, user.password)
-
-    if (!isPasswordCorrect) {
-        return next(new AppError('Неверный пароль', 401, {password: {}}))
+    let validUser = null;
+    for (const user of users) {
+        console.log({password});
+        console.log("user.password",user.password);
+        const isPasswordCorrect = await user.correctPassword(password, user.password);
+        if (isPasswordCorrect) {
+            validUser = user;
+            break;
+        }
     }
 
-    createAndSendToken(user, res)
+    if (!validUser) {
+        return next(new AppError('Неверный пароль', 401, { password: {} }));
+    }
+
+    createAndSendToken(validUser, res)
 
 })
 

@@ -1,12 +1,9 @@
 import TableBtn from "../../global/Table/TableBtn/TableBtn";
 import React from "react";
 import {setSelectValues} from "../../../utils/functions/setSelectValues";
-import {historyActionTypes, historyStatusTypes, userRoles} from "../../../constants";
+import { userRoles} from "../../../constants";
 import {
-    editEmployeePagePath,
-    editTenantPagePath,
     editUserPagePath,
-    tenantEmployeesPagePath
 } from "../../../router/path";
 import {formatFullName} from "../../../utils/functions/formatFullName";
 

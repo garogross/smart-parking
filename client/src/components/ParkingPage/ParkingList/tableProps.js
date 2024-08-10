@@ -92,8 +92,8 @@ export const tableParams = {
             },
             {
                 key: "status",
-                render: (item) => <span className={!item.car ? 'redText' : 'greenText'}>
-                    {Object.values(historyStatusTypes)[+!(item.car)]}
+                render: (item) => <span className={!item.car._id ? 'redText' : 'greenText'}>
+                    {Object.values(historyStatusTypes)[+!(item.car?._id)]}
                 </span>
             },
             {

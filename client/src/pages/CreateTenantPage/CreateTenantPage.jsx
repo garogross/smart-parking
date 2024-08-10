@@ -1,5 +1,4 @@
 import React from 'react';
-import EditTenantForm from "../../components/EditTenantPage/EditTenantForm/EditTenantForm";
 import AddTenantForm from "../../components/CreateTenantPage/AddTenantForm/AddTenantForm";
 
 function CreateTenantPage() {

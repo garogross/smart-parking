@@ -1,8 +1,6 @@
 import TableBtn from "../../global/Table/TableBtn/TableBtn";
 import React from "react";
-import {setSelectValues} from "../../../utils/functions/setSelectValues";
-import {historyActionTypes, historyStatusTypes} from "../../../constants";
-import {editEmployeePagePath, editTenantPagePath, tenantEmployeesPagePath} from "../../../router/path";
+import { editTenantPagePath, tenantEmployeesPagePath} from "../../../router/path";
 
 export const flexCols = [3,2,2,5]
 

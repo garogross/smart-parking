@@ -1,7 +1,6 @@
 import React from 'react';
 import DeletePopup from "../../../global/DeletePopup/DeletePopup";
 import {useDispatch, useSelector} from "react-redux";
-import {deleteTenant} from "../../../../redux/action/tenants";
 import {deleteEmployee} from "../../../../redux/action/employees";
 
 function EmployeesDeletePopup({id,onClose,filters,onDeleteUserSuccess}) {

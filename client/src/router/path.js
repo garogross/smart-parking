@@ -3,7 +3,7 @@ import {Navigate} from "react-router-dom";
 
 import PrivateRoute from "./PrivateRoute";
 import LoginPage from "../pages/LoginPage/LoginPage";
-import MainPage from "../pages/MainPage/MainPage";
+import ParkingPage from "../pages/ParkingPage/ParkingPage";
 import HistoryPage from "../pages/HistoryPage/HistoryPage";
 import TenantsPage from "../pages/TenantsPage/TenantsPage";
 import CreateTenantPage from "../pages/CreateTenantPage/CreateTenantPage";
@@ -21,7 +21,7 @@ import {userRoles} from "../constants";
 import EmployeesPage from "../pages/EmployeesPage/EmployeesPage";
 import TenantReportPage from "../pages/TenantReportPage/TenantReportPage";
 
-export const mainPagePath = '/'
+export const parkingPagePath = '/parking'
 export const loginPagePath = '/login'
 export const createEmployeePagePath = "/employee/create"
 export const createTenantEmployeePagePath = "/tenant/employee/create"
@@ -32,7 +32,7 @@ export const editTenantPagePath = "/tenant/edit"
 export const editUserPagePath = "/user/edit"
 export const employeesPagePath = "/employees"
 export const tenantEmployeesPagePath = "/tenant/employees"
-export const historyPagePath = "/history"
+export const historyPagePath = "/"
 export const profilePagePath = "/profile"
 export const reportPagePath = "/report"
 export const rolesPagePath = "/roles"
@@ -40,7 +40,7 @@ export const tenantsPagePath = "/tenants"
 export const usersPagePath = "/users"
 
 
-const {tenant,admin,security,moderator} = userRoles
+const {tenant,admin,moderator} = userRoles
 
 export const routes = [
     {
@@ -48,12 +48,12 @@ export const routes = [
         component: <PrivateRoute element={<LoginPage/>} noAuth={true}/>
     },
     {
-        path: mainPagePath,
-        component:  <PrivateRoute element={<MainPage/>}/>
+        path: parkingPagePath,
+        component:  <PrivateRoute element={<ParkingPage/>}/>
     },
     {
         path: historyPagePath,
-        component:  <PrivateRoute element={<HistoryPage/>} roles={[tenant,admin,moderator]}/>
+        component:  <PrivateRoute element={<HistoryPage/>}/>
     },
     {
         path: tenantsPagePath,
@@ -82,7 +82,7 @@ export const routes = [
         component: <PrivateRoute
             element={
                 <Navigate
-                    to={mainPagePath}
+                    to={parkingPagePath}
                     replace={true}
                 />
             }
@@ -99,7 +99,7 @@ export const routes = [
         component: <PrivateRoute
             element={
                 <Navigate
-                    to={mainPagePath}
+                    to={parkingPagePath}
                     replace={true}
                 />
             }
@@ -120,7 +120,7 @@ export const routes = [
         component: <PrivateRoute
             element={
                 <Navigate
-                    to={mainPagePath}
+                    to={parkingPagePath}
                     replace={true}
                 />
             }
@@ -137,7 +137,7 @@ export const routes = [
         component: <PrivateRoute
             element={
                 <Navigate
-                    to={mainPagePath}
+                    to={parkingPagePath}
                     replace={true}
                 />
             }
@@ -162,7 +162,7 @@ export const routes = [
         component: <PrivateRoute
             element={
                 <Navigate
-                    to={mainPagePath}
+                    to={parkingPagePath}
                     replace={true}
                 />
             }

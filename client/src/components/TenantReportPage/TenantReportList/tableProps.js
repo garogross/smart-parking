@@ -1,6 +1,5 @@
 import TableBtn from "../../global/Table/TableBtn/TableBtn";
 import React from "react";
-import { editTenantPagePath, tenantEmployeesPagePath} from "../../../router/path";
 import {formatFullName} from "../../../utils/functions/formatFullName";
 
 export const timeConst = "TIME"

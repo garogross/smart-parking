@@ -1,15 +1,10 @@
-import React, {useEffect} from 'react';
+import React from 'react';
+import {useDispatch, useSelector} from "react-redux";
+import {setUpdateProfileError, updateProfile} from "../../../redux/action/auth";
+
 import Header from "../../global/Header/Header";
 import Form from "../../global/Form/Form";
-import {setSelectValues} from "../../../utils/functions/setSelectValues";
-import {userRoles} from "../../../constants";
-import {useDispatch, useSelector} from "react-redux";
-import {addUser, setAddUserError, setUsersPage} from "../../../redux/action/users";
-import {useNavigate} from "react-router-dom";
-import {usersPagePath} from "../../../router/path";
-import {getTenantsNameList} from "../../../redux/action/tenants";
-import {notPopupTexts} from "../../../utils/notPopupTexts";
-import {setUpdateProfileError, updateProfile} from "../../../redux/action/auth";
+
 import {setEditFormSections} from "../../../utils/functions/setEditFormSections";
 
 const sections = [

@@ -1,13 +1,14 @@
 import React from 'react';
+import {useNavigate, useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {addEmployee, setAddEmployeeError, setEmployeesPage} from "../../../redux/action/employees";
+
 import Header from "../../global/Header/Header";
 import Form from "../../global/Form/Form";
+
 import {userRoles} from "../../../constants";
-import {useDispatch, useSelector} from "react-redux";
-import {useNavigate, useParams} from "react-router-dom";
 import {employeesPagePath, tenantEmployeesPagePath} from "../../../router/path";
 import {notPopupTexts} from "../../../utils/notPopupTexts";
-import {setAddTenantError} from "../../../redux/action/tenants";
-import {addEmployee, setAddEmployeeError, setEmployeesPage} from "../../../redux/action/employees";
 
 const sections = [
     {

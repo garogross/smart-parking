@@ -1,6 +1,6 @@
 import React from 'react';
 import Svg from "../../layout/Svg/Svg";
-import {arrowDownIcon, backIcon} from "../../../assets/svg";
+import { backIcon} from "../../../assets/svg";
 import {pageLimit} from "../../../constants";
 import {formatNumber} from "../../../utils/functions/formatNumber";
 

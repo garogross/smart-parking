@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import ReactHlsPlayer from 'react-hls-player';
 
 import styles from "./VideoPlayer.module.scss"
+import { proxy } from '../../../redux/action/fetchTools';
 
 const VideoPlayer = ({isExit}) => {
   const [isZoomed, setIsZoomed] = useState(false)
-  const src = `/api/stream/${isExit ? "exit" : "entry"}/index.m3u8`
+  const src = `${proxy}/api/stream/${isExit ? "exit" : "entry"}/index.m3u8`
 
   const toggleIsZoomed = () => setIsZoomed(prevState => !prevState)
 

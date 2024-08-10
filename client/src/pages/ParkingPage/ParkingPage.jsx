@@ -1,8 +1,8 @@
 import React from 'react';
-import MainList from "../../components/MainPage/MainList/MainList";
+import ParkingList from "../../components/ParkingPage/ParkingList/ParkingList";
 import {useSelector} from "react-redux";
 
-function MainPage() {
+function ParkingPage() {
     const user = useSelector(state => state.auth.user)
 
     return (
@@ -10,7 +10,7 @@ function MainPage() {
             <div className={'container topDistanceBlock'}>
                 {
                     user ?
-                        <MainList/>
+                        <ParkingList/>
                         : null
                 }
             </div>
@@ -18,4 +18,4 @@ function MainPage() {
     );
 }
 
-export default MainPage;
+export default ParkingPage;

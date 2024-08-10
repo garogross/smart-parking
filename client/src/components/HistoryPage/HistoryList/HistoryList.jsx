@@ -1,12 +1,18 @@
 import React from 'react';
+import {useDispatch, useSelector} from "react-redux";
+import {openBareer} from "../../../redux/action/parking";
+import {getHistory, setHistoryPage} from "../../../redux/action/history";
+import {downloadHistoryUrl} from "../../../redux/action/fetchTools";
+
 import Header from "../../global/Header/Header";
 import Table from "../../global/Table/Table";
 import HeaderActions from "../../global/HeaderActions/HeaderActions";
-import {headerActionTypes, userRoles} from "../../../constants";
+import VideoPlayer from "../../ParkingPage/VideoPlayer/VideoPlayer";
+import MainBtn from "../../layout/MainBtn/MainBtn";
+
+import {headerActionTypes, historyActionTypes, userRoles} from "../../../constants";
 import {tableProps} from "./tableProps";
-import {useDispatch, useSelector} from "react-redux";
-import {getHistory, setHistoryPage} from "../../../redux/action/history";
-import {downloadHistoryUrl} from "../../../redux/action/fetchTools";
+import styles from "./HistoryList.module.scss";
 
 
 function HistoryList() {
@@ -43,6 +49,20 @@ function HistoryList() {
                 totalCount={totalCount}
                 page={curPage}
             />
+            {
+                (user.role === userRoles.admin || user.role === userRoles.security) &&
+                <div className={styles['historyList__cameraControl']}>
+                    <div>
+                        <VideoPlayer/>
+                        <MainBtn onClick={() => openBareer(historyActionTypes.entry)}>Открыть шлагбаум</MainBtn>
+                    </div>
+                    <div>
+                        <VideoPlayer isExit={true}/>
+                        <MainBtn onClick={() => openBareer(historyActionTypes.exit)}>Открыть шлагбаум</MainBtn>
+                    </div>
+
+                </div>
+            }
             <HeaderActions actions={headerActions}/>
             <Table
                 titles={titles}

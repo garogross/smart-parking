@@ -6,7 +6,7 @@ import {headerActionTypes, } from "../../../constants";
 import {cols,flexCols,titles} from "./tableProps";
 import {useDispatch, useSelector} from "react-redux";
 import {getTenants, setTenantsPage} from "../../../redux/action/tenants";
-import {downloadHistoryUrl, downloadReportUrl} from "../../../redux/action/fetchTools";
+import { downloadReportUrl} from "../../../redux/action/fetchTools";
 
 
 function ReportList() {

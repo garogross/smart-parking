@@ -4,6 +4,7 @@ import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import {xss} from "express-xss-sanitizer";
 import hpp from 'hpp'
+import cors from "cors"
 
 import {AppError} from "./src/utils/appError.js";
 import {globalErrorHandler} from "./src/controllers/errorController.js";
@@ -19,6 +20,14 @@ import {userRouter} from "./src/routes/userRoutes.js";
 
 
 export const app = express()
+
+const corsOptions = {
+    origin: "*", 
+    optionsSuccessStatus: 200 
+};
+
+// Use CORS middleware
+app.use(cors(corsOptions));
 
 // add headers for secure
 

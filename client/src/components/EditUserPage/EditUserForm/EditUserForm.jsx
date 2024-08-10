@@ -1,17 +1,17 @@
 import React, {useEffect} from 'react';
-import Header from "../../global/Header/Header";
-import Form from "../../global/Form/Form";
-import {setSelectValues} from "../../../utils/functions/setSelectValues";
-import {userRoles} from "../../../constants";
-import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router-dom";
-import {usersPagePath} from "../../../router/path";
+import {useDispatch, useSelector} from "react-redux";
 import {
     editUser,
     getOneUser,
     setEditUserError,
     setUsersPage
 } from "../../../redux/action/users";
+
+import Header from "../../global/Header/Header";
+import Form from "../../global/Form/Form";
+
+import {usersPagePath} from "../../../router/path";
 import {notPopupTexts} from "../../../utils/notPopupTexts";
 import {setEditFormSections} from "../../../utils/functions/setEditFormSections";
 

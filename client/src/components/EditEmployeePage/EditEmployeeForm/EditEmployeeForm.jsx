@@ -1,21 +1,20 @@
 import React, {useEffect} from 'react';
-import Header from "../../global/Header/Header";
-import Form from "../../global/Form/Form";
-import {userRoles} from "../../../constants";
-import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router-dom";
-import {employeesPagePath, tenantEmployeesPagePath, tenantsPagePath} from "../../../router/path";
-import {notPopupTexts} from "../../../utils/notPopupTexts";
-import {editTenant, getOneTenant, setAddTenantError, setTenantsPage} from "../../../redux/action/tenants";
+import {useDispatch, useSelector} from "react-redux";
 import {
-    addEmployee,
     editEmployee,
-    getOneEmployee,
-    setAddEmployeeError, setEditEmployeeError,
+    getOneEmployee, setEditEmployeeError,
     setEmployeesPage
 } from "../../../redux/action/employees";
+
+import Header from "../../global/Header/Header";
+import Form from "../../global/Form/Form";
+
+import {userRoles} from "../../../constants";
+import {employeesPagePath, tenantEmployeesPagePath} from "../../../router/path";
+import {notPopupTexts} from "../../../utils/notPopupTexts";
+
 import {setEditFormSections} from "../../../utils/functions/setEditFormSections";
-import {setEditUserError} from "../../../redux/action/users";
 
 const sections = [
     {

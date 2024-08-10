@@ -19,7 +19,7 @@ const historyStatuses = [
 
 
 const adminAndModeratorProps = {
-    flexCols: [1.5, 3, 2, 1.5, 1.5, 1.5, 1],
+    flexCols: [1.5, 2.5, 2, 1.5, 1.5, 1.5, 1.5],
     titles: [
         {
             name: "Статус",
@@ -96,6 +96,7 @@ const {tenant, admin, security, moderator} = userRoles
 export const tableProps = {
     [admin]: adminAndModeratorProps,
     [moderator]: adminAndModeratorProps,
+    [security]: adminAndModeratorProps,
     [tenant]: {
         flexCols: [5, 3, 2, 2],
         titles: [

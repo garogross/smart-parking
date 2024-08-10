@@ -1,16 +1,18 @@
 import React, {useEffect, useState} from 'react';
+import {useLocation, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {getUsers, setUsersPage} from "../../../redux/action/users";
+
 import Header from "../../global/Header/Header";
 import Table from "../../global/Table/Table";
 import HeaderActions from "../../global/HeaderActions/HeaderActions";
-import {headerActionTypes} from "../../../constants";
-import {flexCols, titles, setCols} from "./tableProps";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
-import {createUserPagePath} from "../../../router/path";
-import {getUsers, setUsersPage} from "../../../redux/action/users";
-import {useDispatch, useSelector} from "react-redux";
 import UsersDeletePopup from "./UsersDeletePopup/UsersDeletePopup";
-import {notPopupTexts} from "../../../utils/notPopupTexts";
 import NotPopup from "../../layout/NotPopup/NotPopup";
+
+import {createUserPagePath} from "../../../router/path";
+import {headerActionTypes} from "../../../constants";
+import {notPopupTexts} from "../../../utils/notPopupTexts";
+import {flexCols, titles, setCols} from "./tableProps";
 
 
 function UsersList() {

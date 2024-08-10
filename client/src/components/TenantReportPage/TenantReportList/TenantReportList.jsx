@@ -1,16 +1,18 @@
 import React, {useEffect, useState} from 'react';
+import {useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {getOneTenant, getTenantReport} from "../../../redux/action/tenants";
+
 import Header from "../../global/Header/Header";
 import Table from "../../global/Table/Table";
 import HeaderActions from "../../global/HeaderActions/HeaderActions";
-import {headerActionTypes, tariffTypes,} from "../../../constants";
-import {flexCols, setCols, timeConst, titles} from "./tableProps";
-import {useDispatch, useSelector} from "react-redux";
-import {getOneTenant, getTenantReport} from "../../../redux/action/tenants";
-import {useParams} from "react-router-dom";
 import TenantReportDateFilterForm from "../TenantReportDateFilterForm/TenantReportDateFilterForm";
 import TenantReportInfo from "../TenantReportInfo/TenantReportInfo";
 import TenantReportDatesModal from "../TenantReportDatesModal/TenantReportDatesModal";
-import {downloadReportUrl, downloadTenantReportUrl} from "../../../redux/action/fetchTools";
+
+import { downloadTenantReportUrl} from "../../../redux/action/fetchTools";
+import {headerActionTypes, tariffTypes,} from "../../../constants";
+import {flexCols, setCols, timeConst, titles} from "./tableProps";
 
 
 function TenantReportList() {

@@ -60,7 +60,7 @@ function TableTitlesCol({
                         <div
                             key={index}
                             style={{flex: flexCols[index]}}
-                            className={styles["tableTitlesCol__item"]}
+                            className={`${styles["tableTitlesCol__item"]} ${!filterBy || filterBy !== "select" ? styles["tableTitlesCol__item_hidden"] : ""}`}
                         >
                             <button
                                 onClick={!sortDisabled ? () => onSort(cols[index].key) : null}

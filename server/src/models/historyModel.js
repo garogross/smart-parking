@@ -6,6 +6,7 @@ import { Car } from "./carModel.js";
 import { Tenant } from "./tenantModel.js";
 import { Employee } from "./employeeModel.js";
 import { cntrlBareerGate } from "../utils/cntrlBareerGate.js";
+import {translateToRussian} from "../utils/translateToRussian.js"
 
 const historySchema = new mongoose.Schema({
     car: {
@@ -37,7 +38,10 @@ historySchema.pre('save', async function (next) {
     const { plateNumber, type } = this
 
     // set car by plateNumber
-    const car = await Car.findOne({ plateNumber }).populate({
+    const car = await Car.findOne({$or: [
+        {plateNumber},
+        {plateNumber: translateToRussian(plateNumber)}
+    ]}).populate({
         path: 'owner',
         populate: { path: 'organization' } // Populate the cars of each employee
     })
@@ -46,6 +50,7 @@ historySchema.pre('save', async function (next) {
     const isEntry = type === historyActionTypes.entry
 
     // update parking
+    const parking = await Parking.findOne({ plateNumber: car?.plateNumber || plateNumber })
     if (isEntry) {
         const data = {
             car: carId || null,
@@ -53,11 +58,11 @@ historySchema.pre('save', async function (next) {
             entryDate: now
         }
 
-        const parking = await Parking.findOne({ plateNumber })
+        
         if (!parking) await Parking.create(data)
 
     } else {
-        await Parking.findOneAndDelete(plateNumber)
+        if(parking) await Parking.findOneAndDelete(plateNumber)
     }
 
     if (car) {

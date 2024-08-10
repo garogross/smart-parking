@@ -1,16 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {Link, useLocation, useNavigate} from "react-router-dom";
-
-import Svg from "../../../layout/Svg/Svg";
-
-import styles from "./TopBar.module.scss"
-import {burgerIcon, logOutIcon} from "../../../../assets/svg";
-import {navLogoImage} from "../../../../assets/images";
-import {loginPagePath, mainPagePath, profilePagePath} from "../../../../router/path";
-import SecondaryBtn from "../../../layout/SecondaryBtn/SecondaryBtn";
+import React from 'react';
+import {Link, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logOut} from "../../../../redux/action/auth";
+
+import Svg from "../../../layout/Svg/Svg";
+import SecondaryBtn from "../../../layout/SecondaryBtn/SecondaryBtn";
+
 import {formatFullName} from "../../../../utils/functions/formatFullName";
+import {loginPagePath,  profilePagePath} from "../../../../router/path";
+import {burgerIcon, logOutIcon} from "../../../../assets/svg";
+import styles from "./TopBar.module.scss"
 
 function TopBar({burgerOpened,onToggleBurger}) {
     const dispatch = useDispatch()

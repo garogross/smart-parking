@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react';
 import {useSelector} from "react-redux";
-import {Link, NavLink, useLocation} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 
 import Svg from "../../../layout/Svg/Svg";
 
@@ -8,7 +8,7 @@ import styles from "./SideBar.module.scss"
 import {
     employeesPagePath,
     historyPagePath,
-    mainPagePath, reportPagePath, tenantsPagePath, usersPagePath,
+    parkingPagePath, reportPagePath, tenantsPagePath, usersPagePath,
 } from "../../../../router/path";
 import {
     historyIcon, parkingIcon, reportIcon, tenantIcon, usersIcon,
@@ -21,15 +21,14 @@ export const {tenant, admin, moderator, security} = userRoles
 
 const navLinks = [
     {
-        title: "Парковка",
-        icon: parkingIcon,
-        path: mainPagePath,
-    },
-    {
         title: "История посещений",
         icon: historyIcon,
         path: historyPagePath,
-        onlyFor: [tenant, admin, moderator]
+    },
+    {
+        title: "Парковка",
+        icon: parkingIcon,
+        path: parkingPagePath,
     },
     {
         title: "Арендаторы",
@@ -101,7 +100,7 @@ function SideBar({burgerOpened, onCloseBurger, isMobile}) {
                 className={`${styles["sideBar"]} ${burgerOpened ? styles["sideBar_active"] : null}`}
             >
                 <Link
-                    to={mainPagePath} onClick={isMobile ? onCloseBurger : null}
+                    to={historyPagePath} onClick={isMobile ? onCloseBurger : null}
                     className={styles["sideBar__logoLink"]}>
                     <img src={navLogoImage} alt="Logo" className={styles["sideBar__logoImage"]}/>
                     <h1 className={styles["sideBar__logoText"]}>СМАРТ ПАРКОВКА</h1>

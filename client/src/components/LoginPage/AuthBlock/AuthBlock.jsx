@@ -11,7 +11,7 @@ import LoadingPopup from "../../layout/LoadingPopup/LoadingPopup";
 
 import {emailImage, passwordImage,} from "../../../assets/images";
 import {errorIcon} from "../../../assets/svg";
-import { mainPagePath} from "../../../router/path";
+import {historyPagePath} from "../../../router/path";
 import styles from "./AuthBlock.module.scss"
 
 const fields = [
@@ -47,7 +47,7 @@ function AuthBlock() {
     const onSubmitForm = (e) => {
         e.preventDefault()
         const onSuccess = () => {
-            navigate(mainPagePath)
+            navigate(historyPagePath)
         }
         dispatch(login(formData,onSuccess))
     }

@@ -11,7 +11,7 @@ import {formatDate} from "../utils/date.js";
 import {formatFullName} from "../utils/formatFullName.js";
 import {setPlateNumber} from "../state.js";
 import {cntrlBareerGate} from "../utils/cntrlBareerGate.js";
-
+import {translateToRussian} from "../utils/translateToRussian.js"
 
 const handleFactory = new HandlerFactory(History, 'history')
 
@@ -34,16 +34,24 @@ export const createHistoryFunc = async (data, verify) => {
         console.log("createHistoryFunc",{data});
         const isExit = data.type === historyActionTypes.exit
         setPlateNumber(data.plateNumber,isExit)
+        const car = await Car
+        .findOne({$or: [
+            {plateNumber: data.plateNumber},
+            {plateNumber: translateToRussian(data.plateNumber)}
+        ]})
+        .populate({
+            path: 'owner',
+            populate: {path: 'organization'} // Populate the cars of each employee
+        })
         if (verify && data.type === historyActionTypes.entry) {
-            const car = await Car
-                .findOne({plateNumber: data.plateNumber})
-                .populate({
-                    path: 'owner',
-                    populate: {path: 'organization'} // Populate the cars of each employee
-                })
+            console.log(translateToRussian(data.plateNumber))
+           
             if (!car) return;
-
             const {organization} = car.owner
+            if(new Date(car.passFrom) > new Date() || new Date(car.passTo) < new Date()) {
+                console.log(`validate of car has expired`)
+                return;
+            }
 
             if(new Date(organization.validate) < new Date()) {
                 console.log(`validate of ${organization.name} has expired`)
@@ -57,10 +65,13 @@ export const createHistoryFunc = async (data, verify) => {
 
         }
     
-        // await cntrlBareerGate(isExit)
+        await cntrlBareerGate(isExit)
         if (!data.plateNumber) return;
         console.log("History.create");
-        await History.create(data)
+        await History.create({
+            ...data,
+        plateNumber: car?.plateNumber ? car.plateNumber : data.plateNumber
+        })
     } catch (e) {
         console.log("createHistory Error", e)
     }

@@ -12,20 +12,20 @@ process.on('uncaughtException', (err) => {
 
 const isProduction = process.env.NODE_ENV
 
-const db = !isProduction ? process.env.DATABASE_LOCAL : process.env.DATABASE.replace('<PASSWORD>', process.env.PASSWORD)
+const db = process.env.DATABASE
 
 mongoose.connect(db, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then((con) => {
     console.log('db connected')
-    // setTcpSocket()
+    setTcpSocket()
 }).catch(err => console.log(err))
 
 const port = process.env.PORT || 5000
 
 
-const server = app.listen(port, () => {
+const server = app.listen(port,'0.0.0.0', () => {
     console.log(`App is running on port ${port}`)
 })
 
