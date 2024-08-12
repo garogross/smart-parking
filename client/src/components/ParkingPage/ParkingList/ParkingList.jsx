@@ -10,15 +10,19 @@ import Table from "../../global/Table/Table";
 
 import { userRoles} from "../../../constants";
 import { tableParams } from "./tableProps";
+import { useNavigate, useParams } from 'react-router-dom';
+import { parkingPagePath } from '../../../router/path';
 
 
 function ParkingList() {
     const dispatch = useDispatch()
+    const params = useParams()
+    const navigate = useNavigate()
 
 
     const user = useSelector(state => state.auth.user)
     const role = user.role
-    const isAdmin = role === userRoles.admin
+    const isAdmin = role === userRoles.admin && !params.id
     const curState = isAdmin ? 'tenants' : 'parking'
     const data = useSelector(state => state[curState].data)
     const totalCount = useSelector(state => state[curState].totalCount)
@@ -29,7 +33,10 @@ function ParkingList() {
     const getData = (filters, page, sortBy) => {
         const setPage = (page) => isAdmin ? setTenantsPage(page) : setParkingPage(page)
         if (page !== curPage) dispatch(setPage(page))
-        const getId = role === userRoles.tenant ? user.organization : null
+        let getId =  null
+
+        if(role === userRoles.tenant) getId = user.organization
+        else if (params.id) getId = params.id
         const getFunc = () => isAdmin ? getTenants({}, sortBy) : getParking(getId, sortBy)
         dispatch(getFunc(filters))
     }
@@ -38,20 +45,24 @@ function ParkingList() {
         dispatch(resetTenant(id))
     }
 
-    const { cols, setCols, flexCols, titles } = tableParams?.[role]
+    const goToTenant = (id) => {
+        navigate(`${parkingPagePath}/${id}`)
+    }
+
+    const { cols, setCols, flexCols, titles } = tableParams?.[params.id ? userRoles.moderator : role] // if parking tenant page it will show moderator columns 
     // const src = `/api/stream/${isExit ? "exit" : "entry"}/index.m3u8`
 
     return (
         <>
             <Header
-                title={'> Парковка'}
+                title={`> Парковка ${params.id ? '> Арендатор' : ""}`}
                 totalCount={totalCount}
                 page={curPage}
             />
 
             <Table
                 titles={titles}
-                cols={setCols ? setCols(onResetTenant) : cols}
+                cols={setCols ? setCols(onResetTenant,goToTenant) : cols}
                 flexCols={flexCols}
                 data={data}
                 loading={getLoading}

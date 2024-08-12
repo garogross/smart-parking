@@ -47,7 +47,7 @@ export const tableParams = {
                 name: "Фактическое на объекте",
             },
         ],
-        setCols: (resetTenant) => ([
+        setCols: (resetTenant,goToTenant) => ([
             {
                 key: "name"
             },
@@ -57,10 +57,16 @@ export const tableParams = {
             {
                 key: "inSiteCarCount",
                 renderActions: (item) => (
+                   <>
+                    <TableBtn
+                        onClick={() => goToTenant(item._id)}
+                        disabled={!item.inSiteCarCount}
+                    >Машины</TableBtn>
                     <TableBtn
                         onClick={() => resetTenant(item._id)}
                         disabled={!item.inSiteCarCount}
                     >Обнулить</TableBtn>
+                   </>
                 )
             },
         ])

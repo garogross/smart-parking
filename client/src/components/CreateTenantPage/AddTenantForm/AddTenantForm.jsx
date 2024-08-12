@@ -147,7 +147,6 @@ function AddTenantForm() {
     const navigate = useNavigate()
     const loading = useSelector(state => state.tenants.addLoading)
     const error = useSelector(state => state.tenants.addError)
-    console.log(error);
 
 
     const onSubmit = (formData) => {

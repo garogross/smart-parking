@@ -20,6 +20,7 @@ import CreateEmployeePage from "../pages/CreateEmployeePage/CreateEmployeePage";
 import {userRoles} from "../constants";
 import EmployeesPage from "../pages/EmployeesPage/EmployeesPage";
 import TenantReportPage from "../pages/TenantReportPage/TenantReportPage";
+import ParkingTenantPage from "../pages/ParkingTenantPage/ParkingTenantPage";
 
 export const parkingPagePath = '/parking'
 export const loginPagePath = '/login'
@@ -49,7 +50,13 @@ export const routes = [
     },
     {
         path: parkingPagePath,
-        component:  <PrivateRoute element={<ParkingPage/>}/>
+        component:  <PrivateRoute element={<ParkingPage/>}/>,
+        children: [
+            {
+                path: ":id",
+                component: <PrivateRoute element={<ParkingTenantPage/>} roles={[admin]}/>
+            }
+        ]
     },
     {
         path: historyPagePath,

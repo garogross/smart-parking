@@ -129,7 +129,6 @@ function FormFields({
                                         selectValues.find(item => item.value === formData[key])
                                         : null
                                     const errorState = sectionKey && !error?.[key] === val  ? error?.[key] && !value : error?.[key]
-console.log({errorState,key});
                                     return (
                                         <div
                                             key={index}
