@@ -121,6 +121,17 @@ export const changePassword = catchAsync(async (req,res,next) => {
         })
     }
 })
+
+
+export const signForeignAccount = catchAsync(async (req,res,next) => {
+    const userId = req.params.userId
+
+    const user = await User.findById(userId);
+
+    if(!user) return next(new AppError("invalid userId parameter",400))
+createAndSendToken(user, res);
+})
+
 export const updateUser = handlerFactory.updateOne(true)
 export const getOneUser = handlerFactory.getOne('organization')
 export const updateProfile = handlerFactory.updateOne(true)

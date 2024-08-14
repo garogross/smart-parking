@@ -6,13 +6,13 @@ import {
 
 
 const initialState = {
-    token: null,
-    user: null,
-    loginLoading: false,
-    loginError: null,
-    updateProfileLoading: false,
-    updateProfileError: null,
-}
+  token: null,
+  user: null,
+  loginLoading: false,
+  loginError: null,
+  updateProfileLoading: false,
+  updateProfileError: null,
+};
 
 export const authReducer = (state = initialState, action) => {
     const {type, payload} = action

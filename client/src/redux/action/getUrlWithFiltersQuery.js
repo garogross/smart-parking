@@ -1,15 +1,20 @@
-import {fullNameChain} from "../../constants";
+import { fullNameChain } from "../../constants";
 
-export const getUrlWithFiltersQuery = (url,page,filters = {},sortBy) => (dispatch,getState) => {
-    let filtersQuery = ""
+export const getUrlWithFiltersQuery =
+  (url, page, filters = {}, sortBy) =>
+  (dispatch, getState) => {
+    let filtersQuery = "";
     if (filters) {
-        for (let key in filters) {
-            const filter = filters[key]
-            if (!filter && typeof filter !== "boolean") continue;
-            let value = filter
-            if(key === 'fullName') value = value.replaceAll(' ',fullNameChain)
-            filtersQuery += `&${key}=${value}`
-        }
+      for (let key in filters) {
+        const filter = filters[key];
+        if (!filter && typeof filter !== "boolean") continue;
+        let value = filter;
+        if (key === "fullName") value = value.replaceAll(" ", fullNameChain);
+        if (key.includes("plateNumber")) value = `t${value}`;
+        filtersQuery += `&${key}=${value}`;
+      }
     }
-    return `${url}?page=${page}${filtersQuery}${sortBy ? `&sortBy=${sortBy}` : ""}`
-}
+    return `${url}?page=${page}${filtersQuery}${
+      sortBy ? `&sortBy=${sortBy}` : ""
+    }`;
+  };

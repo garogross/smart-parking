@@ -137,7 +137,13 @@ export class HandlerFactory {
                 } else if (booleanItem) {
                     match[originalKey] = {$exists: booleanItem.bool}
                 } else {
-                    match[originalKey] = {$regex: `^${query[key]}`, $options: 'i'}
+                    match[originalKey] = {
+                      $regex: `${query[key]
+                        .replaceAll("*", "\\*")
+                        .replaceAll("t","") // for convert numbers to text
+                    }`,
+                      $options: "i",
+                    };
                 }
             }
             const curPage = page ? +page : 1

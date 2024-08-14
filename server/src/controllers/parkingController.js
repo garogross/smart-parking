@@ -69,6 +69,7 @@ export const openBareer = catchAsync(async (req, res,next) => {
         return next(new AppError("invalid typeParams"))
     }
     const isExit = req.params.type === historyActionTypes.exit
+    console.log({globalState})
     const data = {
         plateNumber: globalState[isExit ? "lastExitPlateNumber" : "lastEntryPlateNumber"],
         type: req.params.type

@@ -35,30 +35,32 @@ export const titles = [
 ]
 
 
-export const setCols = (navigate,onOpenDeletePopup) => ([
-    {
-        key: "fullName",
-        render: (item) => formatFullName(item.fullName)
-    },
-    {
-        key: "username"
-    },
-    {
-        key: "email"
-    },
-    {
-        key: "organization--name"
-    },
-    {
-        key: "role",
-        renderActions: (item) => (
-            <>
-                <TableBtn onClick={() => navigate(`${editUserPagePath}/${item._id}`)} >Редактировать</TableBtn>
-                <TableBtn
-                    isNegative={true}
-                    onClick={() => onOpenDeletePopup(item._id)}
-                >Удалить</TableBtn>
-            </>
-        )
-    },
-])
+export const setCols = (navigate, onOpenDeletePopup, signIn) => [
+  {
+    key: "fullName",
+    render: (item) => formatFullName(item.fullName),
+  },
+  {
+    key: "username",
+  },
+  {
+    key: "email",
+  },
+  {
+    key: "organization--name",
+  },
+  {
+    key: "role",
+    renderActions: (item) => (
+      <>
+        <TableBtn onClick={() => signIn(item._id)}>Аккаунт</TableBtn>
+        <TableBtn onClick={() => navigate(`${editUserPagePath}/${item._id}`)}>
+          Редактировать
+        </TableBtn>
+        <TableBtn isNegative={true} onClick={() => onOpenDeletePopup(item._id)}>
+          Удалить
+        </TableBtn>
+      </>
+    ),
+  },
+];

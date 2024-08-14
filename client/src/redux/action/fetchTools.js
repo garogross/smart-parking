@@ -2,7 +2,7 @@ import {getLSItem} from "../../utils/functions/localStorage";
 import {lsProps} from "../../utils/lsProps";
 import {isProduction} from "../../constants";
 
-export const proxy = true ? "http://84.47.169.58:5000" : "" // isProduction
+export const proxy = isProduction ? "http://84.47.169.58:5000" : ""; // isProduction
 export const baseUrl = proxy+'/api/v1';
 
 
@@ -13,7 +13,7 @@ export const baseConfig = {
 }
 
 export const authConfig = (isFormData) => {
-    const token = getLSItem(lsProps.token, true);
+    const token = getLSItem(lsProps.token, true,true);
     const headers = {
         'Authorization': token ? `Bearer ${token}` : null,
     }

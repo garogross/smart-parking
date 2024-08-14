@@ -1,7 +1,6 @@
 @import "../../../../styles/vars";
 @import "../../../../styles/mixins";
 
-
 .topBar {
   @include flexCol(space-between);
   position: fixed;
@@ -45,7 +44,6 @@
     }
   }
 
-
   &__usernameBtn {
     cursor: pointer;
     border: none;
@@ -62,6 +60,20 @@
     }
   }
 
+  &__swithAccountBtn {
+    cursor: pointer;
+    background: $color-main;
+    border-radius: 50%;
+    border: none;
+    padding: 4px;
+    width: 30px;
+    height: 30px;
+    @include flexCol()
+  }
+
+  &__swithAccountIcon {
+    @include svg(18px,transparent,18px, $color-white);
+  }
 
   &__logoutBtnDesk {
     @include smScreenMedia {
@@ -81,9 +93,8 @@
   }
 
   &__logoutIcon {
-    @include svg(24px, $color-white)
+    @include svg(24px, $color-white);
   }
-
 
   &__distanceBlock {
     transition: $transition;

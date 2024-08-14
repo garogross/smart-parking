@@ -9,10 +9,12 @@ import HeaderActions from "../../global/HeaderActions/HeaderActions";
 import UsersDeletePopup from "./UsersDeletePopup/UsersDeletePopup";
 import NotPopup from "../../layout/NotPopup/NotPopup";
 
-import {createUserPagePath} from "../../../router/path";
+import {createUserPagePath, historyPagePath} from "../../../router/path";
 import {headerActionTypes} from "../../../constants";
 import {notPopupTexts} from "../../../utils/notPopupTexts";
 import {flexCols, titles, setCols} from "./tableProps";
+import { signInForeignAccount } from '../../../redux/action/auth';
+import LoadingPopup from '../../layout/LoadingPopup/LoadingPopup';
 
 
 function UsersList() {
@@ -21,6 +23,7 @@ function UsersList() {
     const {state} = useLocation()
 
     const data = useSelector(state => state.users.data)
+    const loginLoading = useSelector((state) => state.auth.loginLoading);
     const totalCount = useSelector(state => state.users.totalCount)
     const curPage = useSelector(state => state.users.page)
     const getLoading = useSelector(state => state.users.getLoading)
@@ -41,6 +44,10 @@ function UsersList() {
 
     const onDeleteUserSuccess = () => {
         setNotPopupText(notPopupTexts.user.delete)
+    }
+
+    const signInAccount = (id) => {
+        dispatch(signInForeignAccount(id,() => navigate(historyPagePath)))
     }
 
 
@@ -71,34 +78,35 @@ function UsersList() {
         },
     ]
 
-    const cols = setCols(navigate, onOpenDeletePopup)
+    const cols = setCols(navigate, onOpenDeletePopup, signInAccount);
     return (
-        <>
-            <Header
-                title={'> Пользователи'}
-                totalCount={totalCount}
-                page={curPage}
-            />
-            <HeaderActions actions={headerActions}/>
-            <Table
-                titles={titles}
-                cols={cols}
-                flexCols={flexCols}
-                data={data}
-                loading={getLoading}
-                totalCount={totalCount}
-                page={curPage}
-                setFilters={setFilters}
-                getData={getData}
-            />
-            <UsersDeletePopup
-                id={deleteItemId}
-                onClose={onCloseDeletePopup}
-                filters={filters}
-                onDeleteUserSuccess={onDeleteUserSuccess}
-            />
-            <NotPopup onClose={onCloseNotPopup} text={notPopupText}/>
-        </>
+      <>
+        <Header
+          title={"> Пользователи"}
+          totalCount={totalCount}
+          page={curPage}
+        />
+        <HeaderActions actions={headerActions} />
+        <Table
+          titles={titles}
+          cols={cols}
+          flexCols={flexCols}
+          data={data}
+          loading={getLoading}
+          totalCount={totalCount}
+          page={curPage}
+          setFilters={setFilters}
+          getData={getData}
+        />
+        <UsersDeletePopup
+          id={deleteItemId}
+          onClose={onCloseDeletePopup}
+          filters={filters}
+          onDeleteUserSuccess={onDeleteUserSuccess}
+        />
+        <NotPopup onClose={onCloseNotPopup} text={notPopupText} />
+        <LoadingPopup show={loginLoading} />
+      </>
     );
 }
 

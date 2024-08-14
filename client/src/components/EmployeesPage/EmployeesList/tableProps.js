@@ -7,23 +7,24 @@ export const flexCols = [3,2,1.5,2,3.5]
 
 
 export const titles = [
-    {
-        name: "Наименование",
-        filterBy: 'input',
-    },
-    {
-        name: "Контактный телефон",
-    },
-    {
-        name: "Номер машины",
-    },
-    {
-        name: "Модель автомобиля",
-    },
-    {
-        name: "Фактическое нахождение на обьекте",
-    },
-]
+  {
+    name: "Наименование",
+    filterBy: "input",
+  },
+  {
+    name: "Контактный телефон",
+  },
+  {
+    name: "Номер машины",
+    filterBy: "input"
+  },
+  {
+    name: "Модель автомобиля",
+  },
+  {
+    name: "Фактическое нахождение на обьекте",
+  },
+];
 
 
 export const setCols = (navigate,onOpenDeletePopup) => ([

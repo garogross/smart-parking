@@ -19,3 +19,4 @@ export const sortIcon = "sort"
 export const downloadIcon = "download"
 export const refreshIcon = "refresh"
 export const fileIcon = "file"
+export const switchAccountIcon = "switchAccount";

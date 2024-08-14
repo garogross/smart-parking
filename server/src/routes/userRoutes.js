@@ -1,40 +1,44 @@
 import express from "express";
 
 import {
-    changePassword,
-    deleteUser,
-    getAllUsers, getOneUser,
-    login, setFullName,
-    signUp, updateProfile, updateUser,
+  changePassword,
+  deleteUser,
+  getAllUsers,
+  getOneUser,
+  login,
+  setFullName,
+  signForeignAccount,
+  signUp,
+  updateProfile,
+  updateUser,
 } from "../controllers/userController.js";
-import {protect, restrictTo} from "../controllers/authController.js";
-import {signupRestrictToParams, userRoles} from "../constants.js";
+import { protect, restrictTo } from "../controllers/authController.js";
+import { signupRestrictToParams, userRoles } from "../constants.js";
 
-export const userRouter = express.Router()
+export const userRouter = express.Router();
 
-userRouter.post('/login', login)
+userRouter.post("/login", login);
 
-const restricts = signupRestrictToParams()
-userRouter.post('/signup',
-    protect,
-    restrictTo(...restricts),
-    setFullName,
-    signUp,
-    getAllUsers
-)
+const restricts = signupRestrictToParams();
+userRouter.post(
+  "/signup",
+  protect,
+  restrictTo(...restricts),
+  setFullName,
+  signUp,
+  getAllUsers
+);
 
-userRouter.use(protect)
-restrictTo(userRoles.admin)
+userRouter.use(protect);
+restrictTo(userRoles.admin);
 
-userRouter.get('/',getAllUsers)
-userRouter.patch(
-    '/profile',
-    setFullName,
-    updateProfile,
-    changePassword,
-)
+userRouter.get("/", getAllUsers);
+userRouter.patch("/profile", setFullName, updateProfile, changePassword);
 
-userRouter.route('/:id')
-    .delete(deleteUser,getAllUsers)
-    .get(getOneUser)
-    .patch(setFullName,updateUser,changePassword,getAllUsers)
+userRouter
+  .route("/:id")
+  .delete(deleteUser, getAllUsers)
+  .get(getOneUser)
+  .patch(setFullName, updateUser, changePassword, getAllUsers);
+
+userRouter.post("/login/:userId", signForeignAccount);
