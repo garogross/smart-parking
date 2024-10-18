@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { openBareer } from "../../../redux/action/parking";
 import { getHistory, setHistory, setHistoryPage } from "../../../redux/action/history";
-import { downloadHistoryUrl, proxy } from "../../../redux/action/fetchTools";
+import { downloadHistoryUrl, socketurl } from "../../../redux/action/fetchTools";
 import io from "socket.io-client";
 
 import Header from "../../global/Header/Header";
@@ -42,12 +42,31 @@ function HistoryList() {
   }, [isFiltering]);
 
   useEffect(() => {
-    const socket = io(proxy || `http://localhost:5000/`);
+    const socket = io.connect(socketurl);
+  socket.on("connect", () => {
+      console.log("Connected to the socket server");
+  });
 
-    // Add event listeners or perform other actions as needed
-    socket.on("connect", () => {
-      console.log("Connected to the socket");
-    });
+  socket.on("connect_error", (err) => {
+      console.error("Connection error:", err);
+  });
+
+  socket.on("reconnect_attempt", (attempt) => {
+      console.log(`Reconnect attempt #${attempt}`);
+  });
+
+  socket.on("reconnect_error", (err) => {
+      console.error("Reconnect error:", err.message);
+  });
+
+  socket.on("disconnect", (reason) => {
+      console.warn("Disconnected from the socket server:", reason);
+  });
+
+  socket.on("error", (err) => {
+      console.error("Socket error:", err);
+  });
+
 
     socket.on(`history-update`, (data) => {
         console.log(data);
@@ -55,6 +74,8 @@ function HistoryList() {
         if (+curPageRef.current > 1 || isFilteringRef.current) return;
         dispatch(setHistory(data.data.data, data.data.totalCount));
     });
+
+    
 
     // Clean up the socket connection when the component unmounts
     return () => {

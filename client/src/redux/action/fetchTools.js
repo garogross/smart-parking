@@ -1,9 +1,10 @@
-import {getLSItem} from "../../utils/functions/localStorage";
-import {lsProps} from "../../utils/lsProps";
-import {isProduction} from "../../constants";
+import { isProduction } from "../../constants";
+import { getLSItem } from "../../utils/functions/localStorage";
+import { lsProps } from "../../utils/lsProps";
 
-export const proxy = isProduction ? "http://84.47.169.58:5000" : ""; // isProduction
+export const proxy = isProduction ? "https://lk.npo-nauka.ru/api" : ""; // isProduction
 export const baseUrl = proxy+'/api/v1';
+export const socketurl = isProduction ? 'https://lk.npo-nauka.ru/' : `http://localhost:4000/`;
 
 
 export const baseConfig = {

@@ -28,7 +28,7 @@ export const employeesReducer = (state = initialState, action) => {
                 ...state,
                 data: payload.data,
                 getLoading: false,
-                totalCount: payload.totalCount || state.totalCount,
+                totalCount: payload.totalCount ?? state.totalCount,
             }
         }
         case GET_EMPLOYEES_LOADING_START: {

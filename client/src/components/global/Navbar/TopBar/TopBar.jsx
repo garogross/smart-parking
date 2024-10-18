@@ -1,24 +1,24 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { logOut, signOutForeignAccount } from "../../../../redux/action/auth";
 
-import Svg from "../../../layout/Svg/Svg";
 import SecondaryBtn from "../../../layout/SecondaryBtn/SecondaryBtn";
+import Svg from "../../../layout/Svg/Svg";
 
-import { formatFullName } from "../../../../utils/functions/formatFullName";
-import {
-  historyPagePath,
-  loginPagePath,
-  profilePagePath,
-} from "../../../../router/path";
 import {
   burgerIcon,
   logOutIcon,
   switchAccountIcon,
 } from "../../../../assets/svg";
-import styles from "./TopBar.module.scss";
+import {
+  historyPagePath,
+  loginPagePath,
+  profilePagePath,
+} from "../../../../router/path";
+import { formatFullName } from "../../../../utils/functions/formatFullName";
 import { lsProps } from "../../../../utils/lsProps";
+import styles from "./TopBar.module.scss";
 
 function TopBar({ burgerOpened, onToggleBurger }) {
   const dispatch = useDispatch();
@@ -73,10 +73,7 @@ function TopBar({ burgerOpened, onToggleBurger }) {
           >
             Выйти
           </SecondaryBtn>
-          <button
-            className={styles["topBar__logoutBtnMob"]}
-            // onClick={onLogOut}
-          >
+          <button className={styles["topBar__logoutBtnMob"]} onClick={onLogOut}>
             <Svg className={styles["topBar__logoutIcon"]} id={logOutIcon} />
           </button>
         </div>

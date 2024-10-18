@@ -34,5 +34,8 @@ const carSchema = new mongoose.Schema({
     toObject: {virtuals: true}
 })
 
+carSchema.index({ model: 1 })
+
+
 
 export const Car = mongoose.model('Car',carSchema)

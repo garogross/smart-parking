@@ -41,7 +41,7 @@ const DownloadBtn = ({downloadUrl, fileName, ...properties}) => {
                     {
                         downloadFileFormats.map((item, index) => (
                             <a
-                                href={proxy + baseUrl + downloadUrlBase + item.key + (downloadUrlQuery || "")}
+                                href={baseUrl + downloadUrlBase + item.key + (downloadUrlQuery || "")}
                                 download={`${fileName}.${item.key}`}
                                 className={styles['headerActions__downloadLink']}
                                 key={index}

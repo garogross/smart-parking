@@ -1,42 +1,49 @@
 import dotenv from "dotenv";
-import {app} from "./app.js";
+import { createServer } from "http";
 import mongoose from "mongoose";
-import { Server } from "socket.io";
+import { app } from "./app.js";
 
-
-import {setTcpSocket} from "./src/utils/tcpSocket.js"
 import { createSocketServer } from "./src/utils/socket.js";
 
-dotenv.config({path: './config.env'})
+dotenv.config({ path: "./config.env" });
 
-process.on('uncaughtException', (err) => {
-    process.exit(1)
-})
+process.on("uncaughtException", (err) => {
+  process.exit(1);
+});
 
-const isProduction = process.env.NODE_ENV
+const isProduction = process.env.NODE_ENV;
 
-const db = process.env.DATABASE
+const db = true
+  ? process.env.DATABASE
+  : process.env.DATABASE.replace("<PASSWORD>", process.env.PASSWORD);
 export let io = null;
+console.log(db);
 
-mongoose.connect(db, {
+mongoose
+  .connect(db, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-}).then((con) => {
-    console.log('db connected')
-    // setTcpSocket()
-}).catch(err => console.log(err))
+  })
+  .then((con) => {
+    console.log("db connected");
+    // setTcpSocket();
+  })
+  .catch((err) => console.log(err));
 
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 5000;
 
+const server = app.listen(port, () => {
+  console.log(`App is running on port ${port}`);
+});
 
-const server = app.listen(port,'0.0.0.0', () => {
-    console.log(`App is running on port ${port}`)
-    io = createSocketServer(server, () => console.log("socket started"));
-})
+export const socketServer = createServer();
+io = createSocketServer(() => console.log("socket started"));
+socketServer.listen(4000, () => {
+  console.log(`Socket.IO server running on port 4000`);
+});
 
-
-process.on('unhandledRejection', (err) => {
-    server.close(() => {
-        process.exit(1)
-    })
-})
+process.on("unhandledRejection", (err) => {
+  server.close(() => {
+    process.exit(1);
+  });
+});

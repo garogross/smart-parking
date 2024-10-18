@@ -56,7 +56,7 @@ export const tenantsReducer = (state = initialState, action) => {
                 ...state,
                 data: payload.data,
                 getLoading: false,
-                totalCount: payload.totalCount || state.totalCount,
+                totalCount: payload.totalCount ?? state.totalCount,
             }
         }
         case GET_TENANTS_LOADING_START: {

@@ -32,6 +32,9 @@ employeeSchema.virtual('cars', {
     foreignField: 'owner'
 })
 
+employeeSchema.index({ fullName: 1 })
+employeeSchema.index({ organization: 1 })
+
 
 employeeSchema.post('findOneAndDelete', async function () {
     try {

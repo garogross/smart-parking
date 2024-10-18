@@ -1,31 +1,42 @@
 import mongoose from "mongoose";
-import { HandlerFactory } from "./HandlerFactory.js";
-import { History } from "../models/historyModel.js";
 import { Car } from "../models/carModel.js";
-import { Employee } from "../models/employeeModel.js";
-import { Tenant } from "../models/tenantModel.js";
+import { History } from "../models/historyModel.js";
+import { HandlerFactory } from "./HandlerFactory.js";
 
-import { catchAsync } from "../utils/catchAsync.js";
+import { io } from "../../server.js";
 import { historyActionTypes, historyStatusTypes } from "../constants.js";
+import { setPlateNumber } from "../state.js";
+import { catchAsync } from "../utils/catchAsync.js";
 import { formatDate } from "../utils/date.js";
 import { formatFullName } from "../utils/formatFullName.js";
-import { setPlateNumber } from "../state.js";
-import { cntrlBareerGate } from "../utils/cntrlBareerGate.js";
 import { translateToRussian } from "../utils/translateToRussian.js";
-import { io } from "../../server.js";
 
 const handleFactory = new HandlerFactory(History, "history");
 
 const filterByOrganization = (req) =>
   req.params.id
     ? {
-        [`car.owner.organization._id`]: new mongoose.Types.ObjectId(
-          req.params.id
-        ),
+        [`organization`]: new mongoose.Types.ObjectId(req.params.id),
       }
     : {};
 
-// export const createHistory = handleFactory.create()
+// export const createHistory = catchAsync(async function (req, res) {
+//   const reqData = req.body.map((item) => ({
+//     car: item?.car?._id,
+//     organization: item.car.owner?.organization,
+//     date: item.date,
+//     type: item.type,
+//     plateNumber: item.plateNumber,
+//     carModel: item.car.model,
+//     organizationName: item.car.owner?.organization?.name,
+//     employeeFullName: item.car.owner?.fullName,
+//   }));
+//   const newDoc = await History.create(reqData);
+//   res.send({
+//     status: "success",
+//     data: newDoc,
+//   });
+// });
 
 export const createHistory = catchAsync(async (req, res, next) => {
   console.log("createHistory");
@@ -42,19 +53,7 @@ export const getHistorySocket = async () => {
   try {
     const pageSize = +process.env.PAGE_LIMIT;
     const total = await History.countDocuments();
-    const data = await History.find()
-      .sort({ date : -1})
-      .populate({
-        path: "car",
-        populate: {
-          path: "owner",
-          populate: {
-            path: "organization",
-          },
-        },
-      })
-      .limit(pageSize);
-
+    const data = await History.find().sort({ date: -1 }).limit(pageSize);
     io.emit(`history-update`, {
       data: {
         status: "success",
@@ -70,7 +69,6 @@ export const getHistorySocket = async () => {
 
 export const createHistoryFunc = async (data, verify) => {
   try {
-    console.log("createHistoryFunc", { data });
     const isExit = data.type === historyActionTypes.exit;
     setPlateNumber(data.plateNumber, isExit);
     const car = await Car.findOne({
@@ -83,8 +81,6 @@ export const createHistoryFunc = async (data, verify) => {
       populate: { path: "organization" }, // Populate the cars of each employee
     });
     if (verify && data.type === historyActionTypes.entry) {
-      console.log(translateToRussian(data.plateNumber));
-
       if (!car) return;
       const { organization } = car.owner;
       if (
@@ -105,7 +101,7 @@ export const createHistoryFunc = async (data, verify) => {
         return;
       }
     }
-
+    console.log("cntrlBareerGate");
     // await cntrlBareerGate(isExit);
     if (!data.plateNumber) return;
     console.log("History.create");
@@ -118,39 +114,10 @@ export const createHistoryFunc = async (data, verify) => {
   }
 };
 
-export const getAllHistory = handleFactory.getAll(
-  [
-    {
-      localField: "car",
-      from: Car.collection.name,
-    },
-    {
-      localField: "car.owner",
-      from: Employee.collection.name,
-    },
-    {
-      localField: "car.owner.organization",
-      from: Tenant.collection.name,
-    },
-  ],
-  filterByOrganization
-);
+export const getAllHistory = handleFactory.getAll(null, filterByOrganization);
 
 export const getAllHistoryMiddleware = handleFactory.getAll(
-  [
-    {
-      localField: "car",
-      from: Car.collection.name,
-    },
-    {
-      localField: "car.owner",
-      from: Employee.collection.name,
-    },
-    {
-      localField: "car.owner.organization",
-      from: Tenant.collection.name,
-    },
-  ],
+  null,
   filterByOrganization,
   null,
   true
@@ -162,18 +129,27 @@ export const getHistoryOfEmployee = handleFactory.getAll(
       localField: "car",
       from: Car.collection.name,
     },
-    {
-      localField: "car.owner",
-      from: Employee.collection.name,
-    },
   ],
   (req) => ({
-    [`car.owner._id`]: new mongoose.Types.ObjectId(req.params.id),
+    [`car.owner`]: new mongoose.Types.ObjectId(req.params.id),
     date: {
       $gte: req.dates.from,
       $lte: req.dates.to,
     },
-  })
+  }),
+  {
+    "car.vin": 0,
+    "car.color": 0,
+    "car.plateNumber": 0,
+    "car.model": 0,
+    "car.passFrom": 0,
+    "car.passTo": 0,
+    organization: 0,
+    plateNumber: 0,
+    organizationName: 0,
+    employeeFullName: 0,
+    carModel: 0,
+  }
 );
 
 export const disablePagination = catchAsync(async (req, res, next) => {

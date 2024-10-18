@@ -1,232 +1,241 @@
-import {catchAsync} from "../utils/catchAsync.js";
-import {AppError} from "../utils/appError.js";
-import {isValidDate} from "../utils/date.js";
+import { AppError } from "../utils/appError.js";
+import { catchAsync } from "../utils/catchAsync.js";
+import { isValidDate } from "../utils/date.js";
 
 export class HandlerFactory {
-    constructor(Model, docName) {
-        this.Model = Model
-        this.docName = docName
-    }
+  constructor(Model, docName) {
+    this.Model = Model;
+    this.docName = docName;
+  }
 
-    create() {
-        const {Model} = this
-        return catchAsync(async function (req, res) {
-            const newDoc = await Model.create(req.body)
-            res.send({
-                status: 'success',
-                data: newDoc
-            })
-        })
-    }
+  create() {
+    const { Model } = this;
+    return catchAsync(async function (req, res) {
+      const newDoc = await Model.create(req.body);
+      res.send({
+        status: "success",
+        data: newDoc,
+      });
+    });
+  }
 
-    updateOne(isMiddleware) {
-
-        const {Model, docName} = this
-        return catchAsync(async function (req, res, next) {
-            const resData = req.body
-            const doc = await Model.findByIdAndUpdate(req.params.id || req.user.id, resData, {
-                new: true,
-                runValidators: true
-            })
-
-            if (!doc) {
-                return next(new AppError(`No ${docName} found with that id`, 404))
-            }
-
-            if (isMiddleware) return next()
-
-            res.send({
-                status: 'success',
-                data: doc
-            })
-        })
-    }
-
-    deleteOne(isMiddleware) {
-        const {Model, docName} = this
-        return catchAsync(async function (req, res, next) {
-            const doc = await Model.findByIdAndDelete(req.params.id)
-
-            if (!doc) {
-                return next(new AppError(`No ${docName} found with that id`, 404))
-            }
-
-            if (isMiddleware) return next()
-
-            res.status(200).send({
-                status: 'success',
-                data: doc
-            })
-        })
-
-    }
-
-    deleteAll() {
-        const {Model} = this
-        return catchAsync(async (req, res) => {
-            await Model.deleteMany()
-            res.status(200).send({
-                status: 'success',
-                message: 'cleared'
-            })
-        })
-    }
-
-    getMe() {
-        return function (req, res, next) {
-            req.params.id = req.user.id
-            next()
+  updateOne(isMiddleware) {
+    const { Model, docName } = this;
+    return catchAsync(async function (req, res, next) {
+      const resData = req.body;
+      const doc = await Model.findByIdAndUpdate(
+        req.params.id || req.user.id,
+        resData,
+        {
+          new: true,
+          runValidators: true,
         }
-    }
+      );
 
-    getOne(populateOptions) {
-        const {Model, docName} = this
-        return catchAsync(async (req, res, next) => {
-            let query = Model.findById(req.params.id)
-            if (populateOptions) {
-                query = query.populate(populateOptions)
-            }
-            const doc = await query
+      if (!doc) {
+        return next(new AppError(`No ${docName} found with that id`, 404));
+      }
 
+      if (isMiddleware) return next();
 
-            if (!doc) {
-                return next(new AppError(`No ${docName} found with that id`, 404))
-            }
+      res.send({
+        status: "success",
+        data: doc,
+      });
+    });
+  }
 
-            res.send({
-                status: 'success',
-                data: doc
-            })
-        })
-    }
+  deleteOne(isMiddleware) {
+    const { Model, docName } = this;
+    return catchAsync(async function (req, res, next) {
+      const doc = await Model.findByIdAndDelete(req.params.id);
 
-    getAll(populateOptions, filterBy, project, isMiddleware) {
-        const {Model, docName} = this
-        return catchAsync(async (req, res, next) => {
-            let match = filterBy ? filterBy(req) : {}
-            const {page,sortBy, ...query} = req.query
-            const booleanProps = [
-                {
-                    str: 'true',
-                    bool: true,
-                },
-                {
-                    str: 'false',
-                    bool: false,
-                },
-            ]
+      if (!doc) {
+        return next(new AppError(`No ${docName} found with that id`, 404));
+      }
 
-            for (let key in query) {
-                let originalKey = key
-                const booleanItem = booleanProps.find(item => item.str === query[key])
-                if (key.includes('--')) originalKey = key.replaceAll('--', ".")
+      if (isMiddleware) return next();
 
-                if (!isNaN(+query[key])) {
-                    match[originalKey] = {
-                        $eq: +query[key]
-                    }
-                } else if (isValidDate(query[key])) {
-                    const date = new Date(query[key])
+      res.status(200).send({
+        status: "success",
+        data: doc,
+      });
+    });
+  }
 
-                    const nextDay = new Date(date)
-                    nextDay.setDate(date.getDate() + 1)
-                    match[originalKey] = {
-                        $lt: nextDay,
-                        $gte: date
-                    }
-                } else if (booleanItem) {
-                    match[originalKey] = {$exists: booleanItem.bool}
-                } else {
-                    match[originalKey] = {
-                      $regex: `${query[key]
-                        .replaceAll("*", "\\*")
-                        .replaceAll("t","") // for convert numbers to text
-                    }`,
-                      $options: "i",
-                    };
-                }
-            }
-            const curPage = page ? +page : 1
-            const pageSize = +process.env.PAGE_LIMIT;
-            const skipDocuments = (curPage - 1) * pageSize
-            const aggregateData = curPage === 0 ?
-                [] :
-                [
-                    {$skip: skipDocuments},
-                    {$limit: pageSize},
-                ]
+  deleteAll() {
+    const { Model } = this;
+    return catchAsync(async (req, res) => {
+      await Model.deleteMany();
+      res.status(200).send({
+        status: "success",
+        message: "cleared",
+      });
+    });
+  }
 
-            let aggregateOptions = [
-                {
-                    $match: match
-                },
-            ]
+  getMe() {
+    return function (req, res, next) {
+      req.params.id = req.user.id;
+      next();
+    };
+  }
 
-            if (populateOptions) {
-                const setPopulateOptions = ({from, localField, foreignField, as}) => {
-                    const result = [
-                        {
-                            $lookup: {
-                                from,
-                                localField: localField || '_id',
-                                foreignField: foreignField || '_id',
-                                as: as || localField
-                            }
-                        },
-                    ]
+  getOne(populateOptions) {
+    const { Model, docName } = this;
+    return catchAsync(async (req, res, next) => {
+      let query = Model.findById(req.params.id);
+      if (populateOptions) {
+        query = query.populate(populateOptions);
+      }
+      const doc = await query;
 
-                    if (!foreignField) {
-                        result.push({
-                            $unwind: {
-                                path: `$${as || localField}`,
-                                preserveNullAndEmptyArrays: true
-                            }
-                        })
-                    }
+      if (!doc) {
+        return next(new AppError(`No ${docName} found with that id`, 404));
+      }
 
-                    return (result)
-                }
-                const populations = populateOptions.flatMap(setPopulateOptions)
+      res.send({
+        status: "success",
+        data: doc,
+      });
+    });
+  }
 
-                aggregateOptions = [
-                    ...populations,
-                    ...aggregateOptions
-                ]
-            }
-            if (sortBy) {
-                const sortByOptions = {
-                    "$sort": {
-                        [sortBy.slice(0, sortBy.length - 1).replaceAll('--','.')]: sortBy.slice(sortBy.length - 1) === '-' ? -1 : 1 // or 1 for ascending order
-                    }
-                }
-                aggregateOptions.push(sortByOptions)
-            }
-            if (project) aggregateOptions.push({$project: project})
-            aggregateOptions.push({
-                $facet: {
-                    totalCount: [
-                        {$count: "count"}
-                    ],
-                    data: aggregateData
-                }
-            })
+  getAll(populateOptions, filterBy, project, isMiddleware) {
+    const { Model, docName } = this;
+    return catchAsync(async (req, res, next) => {
+      let match = filterBy ? filterBy(req) : {};
+      const { page, sortBy, ...query } = req.query;
+      const booleanProps = [
+        {
+          str: "true",
+          bool: true,
+        },
+        {
+          str: "false",
+          bool: false,
+        },
+      ];
 
-            let doc = await Model.aggregate(aggregateOptions)
-            if (!doc[0]) return next(new AppError(`${docName} not found`))
+      for (let key in query) {
+        let originalKey = key;
+        const booleanItem = booleanProps.find(
+          (item) => item.str === query[key]
+        );
+        if (key.includes("--")) originalKey = key.replaceAll("--", ".");
 
-            const {data, totalCount} = doc[0]
+        if (!isNaN(+query[key])) {
+          match[originalKey] = {
+            $eq: +query[key],
+          };
+        } else if (isValidDate(query[key])) {
+          const date = new Date(query[key]);
 
-            if (isMiddleware) {
-                req.data = data;
-                return next()
-            }
+          const nextDay = new Date(date);
+          nextDay.setDate(date.getDate() + 1);
+          match[originalKey] = {
+            $lt: nextDay,
+            $gte: date,
+          };
+        } else if (booleanItem) {
+          // match[originalKey] = {
+          //   [`$${booleanItem.bool ? "and" : "or"}`]: [
+          //     { $exists: booleanItem.bool },
+          //     { [`$${booleanItem.bool ? "ne" : "eq"}`]: null },
+          //   ],
+          // };
+          if (!booleanItem.bool) {
+            match["$or"] = [
+              { [originalKey]: { $exists: false } },
+              { [originalKey]: { $eq: null } },
+            ];
+          } else {
+            match[originalKey] = {
+              $exists: booleanItem.bool,
+              $ne: null,
+            };
+          }
+        } else {
+          match[originalKey] = {
+            $regex: `${
+              query[key].replaceAll("*", "\\*").replaceAll("t", "") // for convert numbers to text
+            }`,
+            $options: "i",
+          };
+        }
+      }
+      const curPage = page ? +page : 1;
+      const pageSize = +process.env.PAGE_LIMIT;
+      const skipDocuments = (curPage - 1) * pageSize;
+      const aggregateData =
+        curPage === 0 ? [] : [{ $skip: skipDocuments }, { $limit: pageSize }];
 
-            res.send({
-                status: 'success',
-                result: data.length,
-                data,
-                totalCount: totalCount[0]?.count || 0
-            })
-        })
-    }
+      let aggregateOptions = [
+        {
+          $match: match,
+        },
+      ];
+
+      if (populateOptions) {
+        const setPopulateOptions = ({ from, localField, foreignField, as }) => {
+          const result = [
+            {
+              $lookup: {
+                from,
+                localField: localField || "_id",
+                foreignField: foreignField || "_id",
+                as: as || localField,
+              },
+            },
+          ];
+
+          if (!foreignField) {
+            result.push({
+              $unwind: {
+                path: `$${as || localField}`,
+                preserveNullAndEmptyArrays: true,
+              },
+            });
+          }
+
+          return result;
+        };
+        const populations = populateOptions.flatMap(setPopulateOptions);
+
+        aggregateOptions = [...populations, ...aggregateOptions];
+      }
+      if (sortBy) {
+        const sortByOptions = {
+          $sort: {
+            [sortBy.slice(0, sortBy.length - 1).replaceAll("--", ".")]:
+              sortBy.slice(sortBy.length - 1) === "-" ? -1 : 1, // or 1 for ascending order
+          },
+        };
+        aggregateOptions.push(sortByOptions);
+      }
+      if (project) aggregateOptions.push({ $project: project });
+      aggregateOptions.push({
+        $facet: {
+          totalCount: [{ $count: "count" }],
+          data: aggregateData,
+        },
+      });
+
+      let doc = await Model.aggregate(aggregateOptions);
+      if (!doc[0]) return next(new AppError(`${docName} not found`));
+      const { data, totalCount } = doc[0];
+
+      if (isMiddleware) {
+        req.data = data;
+        return next();
+      }
+
+      res.send({
+        status: "success",
+        result: data.length,
+        data,
+        totalCount: totalCount[0]?.count || 0,
+      });
+    });
+  }
 }

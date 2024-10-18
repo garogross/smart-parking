@@ -23,7 +23,7 @@ export const parkingReducer = (state = initialState, action) => {
                 ...state,
                 data: payload.data,
                 getLoading: false,
-                totalCount: payload.totalCount || state.totalCount,
+                totalCount: payload.totalCount ?? state.totalCount,
             }
         }
         case GET_PARKING_LOADING_START: {
