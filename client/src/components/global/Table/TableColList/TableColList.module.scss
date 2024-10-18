@@ -1,0 +1,46 @@
+@import "../../../../styles/vars";
+@import "../../../../styles/mixins";
+
+
+
+.tableColList {
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &__item {
+    background-color: $color-blue-rhino;
+    padding: 8px 0;
+    border-radius: 10px;
+    @include flexCol(center,stretch);
+    gap: 10px;
+  }
+
+  &__itemContent {
+    padding-left: 4px;
+    border-left: 1px solid $color-grey;
+    @include setFont(16px, 400);
+    @include flexCol(space-between,flex-start);
+    padding-right: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:first-child {
+      border-color: transparent;
+    }
+
+    & span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-table;
+    }
+  }
+
+  &__itemActions {
+    @include flexCol();
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+}
+

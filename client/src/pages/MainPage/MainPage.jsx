@@ -1,13 +1,18 @@
 import React from 'react';
-
-import MainCardsList from "../../components/MainPage/MainCardsList/MainCardsList";
+import MainList from "../../components/MainPage/MainList/MainList";
+import {useSelector} from "react-redux";
 
 function MainPage() {
+    const user = useSelector(state => state.auth.user)
 
     return (
         <div className={`gradientBg`}>
             <div className={'container topDistanceBlock'}>
-                <MainCardsList/>
+                {
+                    user ?
+                        <MainList/>
+                        : null
+                }
             </div>
         </div>
     );

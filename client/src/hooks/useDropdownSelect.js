@@ -18,12 +18,8 @@ export const useDropdownSelect = ({
     }, [dropDownOpened])
 
     useEffect(() => {
-        if (disableState) {
-            setDisabled(disableState)
-            setSelectedValue('')
-        }
+        setDisabled(disableState)
     }, [disableState])
-
     useEffect(() => {
         onChange(selectedValue)
     }, [selectedValue])

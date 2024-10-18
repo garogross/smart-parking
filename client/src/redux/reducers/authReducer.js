@@ -1,18 +1,18 @@
 import {
     LOGIN_ERROR,
     LOGIN_LOADING_START,
-    LOGIN_SUCCESS, LOGOUT_USER, UPDATE_PASSWORD_ERROR, UPDATE_PASSWORD_LOADING_START, UPDATE_PASSWORD_SUCCESS,
+    LOGIN_SUCCESS, LOGOUT_USER, UPDATE_PROFILE_ERROR, UPDATE_PROFILE_LOADING_START, UPDATE_PROFILE_SUCCESS,
 } from "../types";
 
 
 const initialState = {
-    token: null,
-    user: null,
-    loginLoading: false,
-    loginError: null,
-    updatePasLoading: false,
-    updatePasError: null,
-}
+  token: null,
+  user: null,
+  loginLoading: false,
+  loginError: null,
+  updateProfileLoading: false,
+  updateProfileError: null,
+};
 
 export const authReducer = (state = initialState, action) => {
     const {type, payload} = action
@@ -47,25 +47,25 @@ export const authReducer = (state = initialState, action) => {
                 user: null,
             };
         }
-        case UPDATE_PASSWORD_SUCCESS: {
+        case UPDATE_PROFILE_SUCCESS: {
             return {
                 ...state,
-                token: payload,
-                updatePasLoading: false
+                user: payload,
+                updateProfileLoading: false
             }
         }
-        case UPDATE_PASSWORD_LOADING_START: {
+        case UPDATE_PROFILE_LOADING_START: {
             return {
                 ...state,
-                updatePasLoading: true,
-                updatePasError: null,
+                updateProfileLoading: true,
+                updateProfileError: null,
             }
         }
-        case UPDATE_PASSWORD_ERROR: {
+        case UPDATE_PROFILE_ERROR: {
             return {
                 ...state,
-                updatePasError: payload,
-                updatePasLoading: false
+                updateProfileError: payload,
+                updateProfileLoading: false
             }
         }
         default:

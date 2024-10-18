@@ -1,12 +1,16 @@
 import {combineReducers} from "redux"
 import {authReducer} from "./authReducer";
-import {cardsReducer} from "./cardsReducer";
-import {paymentsReducer} from "./paymentsReducer";
 import {usersReducer} from "./usersReducer";
+import {tenantsReducer} from "./tenantsReducer";
+import {employeesReducer} from "./employeesReducer";
+import {parkingReducer} from "./parkingReducer";
+import {historyReducer} from "./historyReducer";
 
 export default combineReducers({
     auth: authReducer,
-    cards: cardsReducer,
-    payments: paymentsReducer,
-    users: usersReducer
+    users: usersReducer,
+    tenants: tenantsReducer,
+    employees: employeesReducer,
+    parking: parkingReducer,
+    history: historyReducer,
 })

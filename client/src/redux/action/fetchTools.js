@@ -2,8 +2,9 @@ import {getLSItem} from "../../utils/functions/localStorage";
 import {lsProps} from "../../utils/lsProps";
 import {isProduction} from "../../constants";
 
-export const baseUrl = '/api/v1';
-export const proxy = isProduction ? "https://infolog.uz" : "http://localhost:5000"
+export const proxy = isProduction ? "http://84.47.169.58:5000" : ""; // isProduction
+export const baseUrl = proxy+'/api/v1';
+
 
 export const baseConfig = {
     headers: {
@@ -12,7 +13,7 @@ export const baseConfig = {
 }
 
 export const authConfig = (isFormData) => {
-    const token = getLSItem(lsProps.token, true);
+    const token = getLSItem(lsProps.token, true,true);
     const headers = {
         'Authorization': token ? `Bearer ${token}` : null,
     }
@@ -26,27 +27,54 @@ export const authConfig = (isFormData) => {
 
 // auth
 export const siginUrl = '/users/login'
-export const updatePasUrl = '/users/updatePassword'
-
-// cards
-export const getCardsUrl = '/cards/'
-export const createCardsUrl = '/cards/create'
-
-// payments
-export const getPaymentsUrl = '/payments/'
-export const createPaymentsUrl = '/payments/create/'
-export const downloadFileUrl = '/payments/download/'
-export const deletePaymentUrl = '/payments/delete/'
+export const updateProfileUrl = '/users/profile'
 
 // users
 export const getUsersUrl = '/users/'
 export const signupUserUrl = '/users/signup'
 
+// tenants
+export const getTenantsNameListUrl = '/tenants/nameList'
+export const getTenantsUrl = '/tenants/'
+export const addTenantsUrl = '/tenants/create'
+
+// employees
+export const getEmployeesUrl = '/employees/'
+export const getOneEmployeeUrl = '/employees/getOne/'
+export const addEmployeesUrl = '/employees/create'
+export const getEmployeesReportUrl = '/employees/report/'
+
+
+// parking
+export const getParkingUrl = '/parking/'
+export const openBareerUrl = '/parking/openBareer/'
+
+// history
+export const getHistoryUrl = '/history/'
+export const getHistoryReportUrl = '/history/report/'
+export const downloadHistoryUrl = '/history/download/'
+
+// report
+export const downloadReportUrl = '/tenants/report/download/'
+export const downloadTenantReportUrl = '/employees/report/download/'
+
+
 
 export const fetchRequest = async (fetchUrl, method = 'GET', body = null, config = authConfig()) => {
+
+    const filteredBody = {}
+
+    if(body) {
+        for (let key in body) {
+            if(body[key]) {
+                filteredBody[key] =  body[key]
+            }
+        }
+    }
+
     const response = await fetch(`${baseUrl}${fetchUrl}`, {
         method: method,
-        body: body,
+        body: body && JSON.stringify(filteredBody),
         ...config
     });
     const resData = await response.json();
@@ -67,7 +95,13 @@ export const setError = (text) => {
 }
 
 export const setFormError = (type,error) => dispatch => {
-    const payload = error?.message?.error?.errors || error
-
+    let payload =  error
+    if(error?.message?.message?.startsWith('E11000')) {
+        payload = error?.message?.error?.keyValue
+    }else if(error?.message?.error?.code === 11000) {
+        payload = error?.message?.error.keyValue
+    } else if(error?.message?.error?.errors) {
+        payload = error?.message?.error?.errors
+    }
     dispatch({type,payload})
 }

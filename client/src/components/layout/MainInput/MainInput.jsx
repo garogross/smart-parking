@@ -11,7 +11,6 @@ const MainInput = memo(({
                         }) => {
     const InputElement = isTextArea ? 'textarea' : 'input';
 
-
     return (
         <InputElement
             onChange={onChange}

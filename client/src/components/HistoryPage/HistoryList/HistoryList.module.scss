@@ -1,0 +1,12 @@
+@import "../../../styles/vars";
+@import "../../../styles/mixins";
+
+.historyList__cameraControl {
+    @include flexCol(space-between,flex-start);
+    gap: 20px;
+    margin-bottom: 10px;
+
+    @include mdScreenMedia {
+        flex-direction: column;
+    }
+}

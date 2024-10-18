@@ -1,0 +1,31 @@
+@import "../../../styles/vars";
+@import "../../../styles/mixins";
+
+.videoPlayer {
+    height: 400px;
+    width: 100%;
+    max-width: 700px;
+    background-color: $color-black;
+    cursor: zoom-in;
+
+    &_active {
+        cursor: zoom-out;
+    }
+
+    &__video {
+        height: 100%;
+        max-height: 400px;
+        
+        &_active {
+            transition: $transition;
+            position: fixed;
+            top: 10px;
+            height: 100%;
+            max-height: calc(100vh - 30px);
+            left: 30px;
+            max-width: calc(100vw - 60px);
+            z-index: 999;
+        }
+    }
+}
+

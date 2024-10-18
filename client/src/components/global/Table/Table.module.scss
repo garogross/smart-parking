@@ -1,0 +1,14 @@
+@import "../../../styles/vars";
+@import "../../../styles/mixins";
+
+
+.table {
+  overflow: auto;
+  border: 1px solid $color-black-box;
+  margin-bottom: 10px;
+
+
+  &__container {
+    min-width: 830px;
+  }
+}

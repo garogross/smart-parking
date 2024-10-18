@@ -1,0 +1,30 @@
+@import "../../../../styles/vars";
+@import "../../../../styles/mixins";
+
+
+.tableBtn {
+  cursor: pointer;
+  border: none;
+  background: $color-main;
+  white-space: nowrap;
+  text-align: center;
+  padding: 5px 8px;
+  border-radius: 6px;
+  transition: $transition;
+  @include setFont(14px, 700, $color-white);
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+  @include smScreenMedia {
+    font-size: 12px;
+  }
+
+  &:disabled {
+    background: $color-grey;
+    cursor: default;
+  }
+
+  &_negative {
+    background-color: $color-red;
+  }
+}

@@ -1,0 +1,86 @@
+@import "../../../styles/vars";
+@import "../../../styles/mixins";
+
+
+.headerActions {
+  @include flexCol(flex-end, flex-end);
+  gap: 6px;
+  margin-bottom: 16px;
+
+  @include smScreenMedia {
+    //flex-direction: column;
+  }
+
+  &__iconBtn {
+    width: 54px;
+    height: 54px;
+    cursor: pointer;
+    border: none;
+    background: $color-main;
+    border-radius: 10px;
+    transition: $transition;
+    @include flexCol();
+
+    @include smScreenMedia {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+    }
+
+    &:disabled {
+      background: $color-grey;
+      cursor: default;
+    }
+
+    &_passive {
+      background-color: $color-blue-passive;
+    }
+  }
+
+  &__icon {
+    @include svg(28px, $color-white)
+  }
+
+  &__mainBtn {
+    max-width: 184px;
+
+    @include smScreenMedia {
+      max-width: 120px;
+    }
+  }
+
+  &__downloadBtn {
+    position: relative;
+  }
+
+  &__downloadPopup {
+    position: absolute;
+    right: 0;
+    top: 60px;
+    @include flexCol(center,flex-start);
+    flex-direction: column;
+    padding: 4px 8px;
+    min-width: 80px;
+    gap: 8px;
+    background-color: $color-black;
+    border-radius: 10px;
+    border: 1px solid $color-main;
+    z-index: 666;
+  }
+
+  &__downloadLink {
+    @include setFont(16px, 400);
+    @include flexCol();
+    gap: 6px;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      color: $color-main;
+    }
+  }
+
+  &__downloadLinkIcon {
+    @include svg(20px,$color-white)
+  }
+}

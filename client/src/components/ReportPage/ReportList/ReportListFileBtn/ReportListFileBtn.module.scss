@@ -1,0 +1,11 @@
+@import "../../../../styles/vars";
+@import "../../../../styles/mixins";
+
+
+.reportListFileBtn {
+  @include flexCol();
+
+  &__icon {
+    @include svg(20px,$color-white);
+  }
+}

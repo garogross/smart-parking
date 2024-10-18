@@ -13,27 +13,46 @@
 
 body {
   background: $color-bg;
+  transition: $transition;
 }
 
+.withSidebar {
+  padding-left: $sideBar-closed-width;
+
+  &_opened {
+    padding-left: $sideBar-opened-width;
+
+    @include mdScreenMedia {
+      padding-left: $sideBar-closed-width;
+    }
+  }
+}
+
+
+
+input::-webkit-calendar-picker-indicator {
+  color: rgba(0, 0, 0, 0);
+  opacity: 1;
+  display: block;
+  background-image: url(../assets/images/MainInput/calendar.png);
+  background-repeat: no-repeat;
+  background-size: 14px;
+  width: 12px;
+  height: 12px;
+  border-width: thin;
+  cursor: pointer;
+}
+
+
 .container {
-  width: 100%;
-  max-width: 1250px;
-  margin-left: auto;
-  margin-right: auto;
   padding-right: $container-padding;
   padding-left: $container-padding;
 
-  @include xlScreenMedia {
-    max-width: 960px;
-  }
-
-  @include lgScreenMedia {
-    max-width: 720px;
-  }
-
   @include mdScreenMedia {
-    max-width: 560px;
+    padding-right: $container-padding-mob;
+    padding-left: $container-padding-mob;
   }
+
 }
 
 .titleTxt {
@@ -66,6 +85,14 @@ body {
   }
 }
 
+.redText {
+  color: $color-red;
+}
+
+.greenText {
+  color: $color-green;
+}
+
 .blueText {
   color: $color-main;
 }
@@ -96,14 +123,11 @@ body {
   background: $color-black-box;
   width: 100%;
   border-radius: 16px;
-  padding: 40px;
+  padding: 20px 10px;
 
   @include mdScreenMedia {
-    padding: 20px;
-  }
-
-  @include smScreenMedia {
-    padding: 0;
+    padding: 10px;
+    border-radius: 8px;
   }
 }
 
@@ -138,6 +162,7 @@ body {
   background: radial-gradient(circle at -20% 50%, rgba(88, 113, 242, 0.2) 2%, rgba(88, 113, 242, 0) 37%),
   radial-gradient(circle at 120% 50%, rgba(88, 113, 242, 0.2) 2%, rgba(88, 113, 242, 0) 37%);
   min-height: 100vh;
+  width: 100%;
 
   @include smScreenMedia {
     background: none;
@@ -169,18 +194,6 @@ body {
     min-height: 57px;
   }
 
-  &::-webkit-calendar-picker-indicator {
-    color: rgba(0, 0, 0, 0);
-    opacity: 1;
-    display: block;
-    background-image: url(../assets/images/MainInput/calendar.png);
-    background-repeat: no-repeat;
-    background-size: 14px;
-    width: 12px;
-    height: 12px;
-    border-width: thin;
-    cursor: pointer;
-  }
 
   &:-webkit-autofill,
   &:-webkit-autofill:hover,

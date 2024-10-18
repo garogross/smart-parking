@@ -39,7 +39,11 @@ function Select({
             ref={selectedRef}
             className={`${styles["select"]} ${disabled ? styles["select_disabled"] : ''}`}>
             <div
-                className={`${styles["select__dropDownBtn"]} ${className ? className : ''} mainInput ${isInvalid ? 'mainInput_invalid' : ''}`}
+                className={
+                    `${styles["select__dropDownBtn"]} `+
+                    `${className ? className : `mainInput`} `+
+                    `${isInvalid ? 'mainInput_invalid' : ''}`
+                }
                 onClick={onToggleDropdowns}>
                 <div className={styles['select__dropDownBtnContent']}>
                     <span className={styles["select__selectDropdownBtnText"]}>{btnText}</span>
@@ -59,14 +63,14 @@ function Select({
                         {
                             sortedContentArr.map((item, index) => {
                                 const itemContent = item.item
-                                const itemValue = item?.value ? item?.value : item
+                                const itemValue = item?.value !== undefined ? item?.value : item
                                 return (
                                     <div
                                         {...attributes}
                                         key={index}
                                         className={styles["select__dropdownItem"]}
                                         onClickCapture={() => onChangeSelectValues(itemValue)}
-                                    >{itemContent}</div>
+                                    ><span>{itemContent}</span></div>
                                 )
                             })}
                     </div>

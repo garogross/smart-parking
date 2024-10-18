@@ -11,6 +11,8 @@ import {
     routerContent
 } from "./contents.js";
 
+//    npm run create-mvc tenant crud
+
 const {argv} = process
 
 const fileName = argv[2]

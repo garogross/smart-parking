@@ -4,15 +4,30 @@ import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import {xss} from "express-xss-sanitizer";
 import hpp from 'hpp'
+import cors from "cors"
 
 import {AppError} from "./src/utils/appError.js";
 import {globalErrorHandler} from "./src/controllers/errorController.js";
 
 // ROUTES1
-import {userRoutes} from "./src/routes/userRoutes.js";
+import {parkingRouter} from "./src/routes/parkingRoutes.js";
+import {tenantRouter} from "./src/routes/tenantRoutes.js";
+import {employeeRouter} from "./src/routes/employeeRoutes.js";
+import {carRouter} from "./src/routes/carRoutes.js";
+import {historyRouter} from "./src/routes/historyRoutes.js";
 import bodyParser from "body-parser";
+import {userRouter} from "./src/routes/userRoutes.js";
+
 
 export const app = express()
+
+const corsOptions = {
+    origin: "*", 
+    optionsSuccessStatus: 200 
+};
+
+// Use CORS middleware
+app.use(cors(corsOptions));
 
 // add headers for secure
 
@@ -27,7 +42,7 @@ app.use(express.json())
 const limiter = rateLimit({
     skip: () => false, // or add your own logic for skipping rate limiting
     max: 100,
-    windowMs: 60 * 60 * 1000,
+    windowMs: 60 * 60 * 100000000,
     message: 'Too many requests from this IP, please try again in an hour'
 })
 
@@ -50,10 +65,17 @@ app.use(hpp({
 }))
 
 
+
 app.use('/api', express.static('public'));
 
 // ROUTES2
-app.use('/api/v1/users', userRoutes)
+app.use('/api/v1/parking', parkingRouter)
+app.use('/api/v1/tenants', tenantRouter)
+app.use('/api/v1/users', userRouter)
+app.use('/api/v1/employees', employeeRouter)
+app.use('/api/v1/cars', carRouter)
+app.use('/api/v1/history', historyRouter)
+
 
 app.all('*', (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} in this server`, 404))

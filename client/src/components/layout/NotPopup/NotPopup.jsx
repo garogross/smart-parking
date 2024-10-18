@@ -1,11 +1,24 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import styles from "./NotPopup.module.scss"
 import NewPortalProvider from "../../../providers/NewPortalProvider";
 import TransitionProvider from "../../../providers/TransitionProvider";
 import Svg from "../Svg/Svg";
 import {crossIcon} from "../../../assets/svg";
 
-function NotPopup({show,onClose,text}) {
+function NotPopup({onClose,text}) {
+    const timeOutRef = useRef(null)
+    const show = !!(text)
+    const handleClose = () => {
+        onClose()
+        if(timeOutRef.current) clearTimeout(timeOutRef.current)
+    }
+
+    useEffect(() => {
+        if(text) {
+            timeOutRef.current = setTimeout(handleClose,3000)
+        }
+    }, [text]);
+
     return (
         <NewPortalProvider>
             <TransitionProvider
@@ -19,7 +32,7 @@ function NotPopup({show,onClose,text}) {
                     </p>
                     <button
                         className={styles["notPopup__btn"]}
-                        onClick={onClose}
+                        onClick={handleClose}
                     >
                         <Svg id={crossIcon} className={styles["notPopup__crossIcon"]}/>
                     </button>
